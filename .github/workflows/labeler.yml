@@ -13,4 +13,6 @@ jobs:
         steps:
             - name: labeling
               uses: actions/labeler@v5
+              with:
+                configuration-path: .github/configs/labeler.yml
 
