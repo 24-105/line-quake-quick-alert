@@ -4,11 +4,10 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch: {}
 
 jobs:
   check-branch:
-    if: github.base_ref != 'develop'
+    if: startsWith(github.ref, 'refs/heads/develop') == false
     runs-on: ubuntu-latest
     steps:
       - name: Check Branch and fail
