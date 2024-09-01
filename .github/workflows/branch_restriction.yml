@@ -1,15 +1,16 @@
 name: 'Branch Restriction'
 
 on:
-  push:
-    branches-ignore: [main, develop]
+  pull_request:
+    branches:
+      - main
 
 jobs:
   check-branch:
-    if: startsWith(github.ref, 'resf/heads/develop') == false
+    if: github.base_ref != 'develop'
     runs-on: ubuntu-latest
     steps:
       - name: Check Branch and fail
         run: |
-          echo "Push to 'main' branch is restriction!"
+          echo "Only pull requests from 'develop' to 'main' are allowed."
           exit 1
