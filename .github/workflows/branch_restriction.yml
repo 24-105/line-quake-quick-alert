@@ -1,0 +1,15 @@
+name: 'Branch Restriction'
+
+on:
+  push:
+    branches-ignore: [main, develop]
+
+jobs:
+  check-branch:
+    if: startsWith(github.ref, 'resf/heads/develop') == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Branch and fail
+        run: |
+          echo "Push to 'main' branch is restriction!"
+          exit 1
