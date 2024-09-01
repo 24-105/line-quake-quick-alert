@@ -8,10 +8,11 @@ on:
 
 jobs:
   check-branch:
-    if: startsWith(github.ref, 'refs/heads/develop') == false
     runs-on: ubuntu-latest
     steps:
       - name: Check Branch and fail
         run: |
-          echo "Only pull requests from 'develop' to 'main' are allowed."
-          exit 1
+          if [ "${{ github.event.pull_request.base.ref }}" != "main" ] || [ "${{ github.event.pull_request.head.ref }}" != "develop" ]; then
+            echo "Only pull requests from 'develop' to 'main' are allowed."
+            exit 1
+          fi
