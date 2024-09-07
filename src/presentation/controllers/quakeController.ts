@@ -6,11 +6,11 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { QuakeService } from '../../application/services/quakeService';
 import {
   getQuakeHistoryInfoRequestDto,
   getQuakeHistoryInfoResponseDto,
 } from 'src/application/interfaces/dto/quakeHistoryInfoDto';
+import { QuakeService } from 'src/application/services/quakeService';
 
 /**
  * 地震情報コントローラー
@@ -23,17 +23,30 @@ export class QuakeController {
 
   /**
    * 地震情報を取得する
-   * @returns getQuakeHistoryInfoDto
+   * @param request リクエストパラメーター
+   * @returns 地震情報DTO
    */
   @Get('history')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async getQuakeHistoryInfo(
+  async fetchQuakeHistoryInfo(
     @Query() request: getQuakeHistoryInfoRequestDto,
-  ): Promise<getQuakeHistoryInfoResponseDto> {
+  ): Promise<getQuakeHistoryInfoResponseDto[]> {
     const { limit, offset } = request;
-    this.logger.log(`limit: ${limit}`);
-    this.logger.log(`offset: ${offset}`);
-    const response = await this.quakeService.fetchQuake(limit, offset);
-    return response.data;
+
+    this.logger.log(
+      `fetchQuakeHistoryInfo called with limit: ${limit}, offset: ${offset}`,
+    );
+
+    try {
+      const response = await this.quakeService.fetchQuakeHistoryInfo(
+        limit,
+        offset,
+      );
+      this.logger.log('Quake history successfully fetched');
+      return response;
+    } catch (err) {
+      this.logger.error('Failed to fetch quake history', err.stack);
+      throw err;
+    }
   }
 }
