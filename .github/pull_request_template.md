@@ -8,6 +8,8 @@
 
 # Check List
 
-- [ ] (Fill in the check items)
+- [ ] （コンパイルエラーがない　No compilation errors）
+- [ ] （Nest.jsの起動エラーがない　No Nest.js startup errors）
+- [ ] （テストにエラーがない　No errors in tests）
 
 ---
