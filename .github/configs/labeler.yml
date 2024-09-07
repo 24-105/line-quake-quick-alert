@@ -1,13 +1,25 @@
 # Directory pattern
-app:
+application:
   - changed-files:
-      - any-glob-to-any-file: 'src/**'
+      - any-glob-to-any-file: 'src/application/**'
 
-github_actions:
+domain:
+  - changed-files:
+      - any-glob-to-any-file: 'src/domain/**'
+
+infrastructure:
+  - changed-files:
+      - any-glob-to-any-file: 'src/infrastructure/**'
+
+presentation:
+  - changed-files:
+      - any-glob-to-any-file: 'src/presentation/**'
+
+.github:
   - changed-files:
       - any-glob-to-any-file: '.github/**'
 
-tests:
+test:
   - changed-files:
       - any-glob-to-any-file: 'tests/**'
 
