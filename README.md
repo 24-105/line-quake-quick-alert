@@ -26,6 +26,10 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## インフラ構成
+
+![alt text](public/image/line-quake-quick-alert-infra.jpg)
+
 ## Project setup
 
 ```bash
