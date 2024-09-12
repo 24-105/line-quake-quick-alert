@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
-import { QuakeService } from './application/services/quakeService';
-import { QuakeController } from './presentation/controllers/quakeController';
-import { P2pQuakeApiService } from './infrastructure/api/p2pQuake/p2pQuakeApiService';
+import { QuakeModule } from './modules/quakeModule';
+import { LineModule } from './modules/lineModule';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HttpModule],
-  controllers: [QuakeController],
-  providers: [QuakeService, P2pQuakeApiService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // グローバルに設定する
+    }),
+    QuakeModule,
+    LineModule,
+  ],
 })
 export class AppModule {}
