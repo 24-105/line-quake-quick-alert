@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
 import { getQuakeHistoryInfoResponseDto } from '../dto/quakeHistoryInfoDto';
+import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 
 /**
  * 地震情報サービスロジック
  */
 @Injectable()
-export class QuakeService {
+export class QuakeService implements IQuakeService {
   private readonly logger = new Logger(QuakeService.name);
   constructor(private readonly p2pQuakeApiService: P2pQuakeApiService) {}
 

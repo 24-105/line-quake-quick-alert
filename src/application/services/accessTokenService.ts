@@ -1,20 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as jose from 'node-jose';
-import { LineApiService } from 'src/infrastructure/api/line/lineApiService';
 import { getChannelAccessTokenResponseDto } from '../dto/channelAccessTokenDto';
+import { LineMessagingApiService } from 'src/infrastructure/api/line/lineMessagingApiService';
+import { IAccessTokenService } from 'src/domain/interfaces/services/accessTokenService';
 
 /**
  * アクセストークンサービス
  */
 @Injectable()
-export class AccessTokenService {
+export class AccessTokenService implements IAccessTokenService {
   private readonly logger = new Logger(AccessTokenService.name);
   private readonly GENERATE_JWT_LOG = 'Generating JWT';
   private readonly REQUEST_ACCESS_TOKEN_LOG =
     'Requesting channel access token from the LINE Messaging API.';
   private readonly GENERATE_JWT_ERROR_LOG = 'Failed to generate JWT';
 
-  constructor(private readonly lineApiService: LineApiService) {}
+  constructor(
+    private readonly lineMessagingApiService: LineMessagingApiService,
+  ) {}
 
   /**
    * JWTを生成する
@@ -61,6 +64,6 @@ export class AccessTokenService {
     jwt: string,
   ): Promise<getChannelAccessTokenResponseDto> {
     this.logger.log(this.REQUEST_ACCESS_TOKEN_LOG);
-    return await this.lineApiService.getChannelAccessToken(jwt);
+    return await this.lineMessagingApiService.getChannelAccessToken(jwt);
   }
 }

@@ -3,13 +3,14 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { URLSearchParams } from 'url';
 import { getChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
+import { ILineMessagingApiService } from 'src/domain/interfaces/api/lineApiService';
 
 /**
- * LINE APIサービス
+ * LINE Messaging APIサービス
  */
 @Injectable()
-export class LineApiService {
-  private readonly logger = new Logger(LineApiService.name);
+export class LineMessagingApiService implements ILineMessagingApiService {
+  private readonly logger = new Logger(LineMessagingApiService.name);
   private readonly REQUEST_ACCESS_TOKEN_LOG =
     'Requesting channel access token from the LINE Messaging API.';
   private readonly GET_ACCESS_TOKEN_ERROR_LOG =
