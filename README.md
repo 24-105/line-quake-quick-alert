@@ -28,8 +28,6 @@
 
 ## インフラ構成
 
-![alt text](public/image/line-quake-quick-alert-infra.jpg)
-
 ## Project setup
 
 ```bash
