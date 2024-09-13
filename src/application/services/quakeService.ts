@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
-import { getQuakeHistoryInfoResponseDto } from '../interfaces/dto/quakeHistoryInfoDto';
+import { getQuakeHistoryInfoResponseDto } from '../dto/quakeHistoryInfoDto';
 
 /**
  * 地震情報サービスロジック

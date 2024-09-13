@@ -4,18 +4,19 @@ import { HttpService } from '@nestjs/axios';
 import {
   IssueCorrect,
   IssueType,
-} from 'src/application/interfaces/enum/quakeHistrory/issueEnum';
+} from 'src/domain/enum/quakeHistrory/issueEnum';
 import {
   EarthquakeDomesticTsunami,
   EarthquakeForeignTsunami,
-} from 'src/application/interfaces/enum/quakeHistrory/earthquakeEnum';
-import { PointsScale } from 'src/application/interfaces/enum/quakeHistrory/pointsEnum';
-import {
-  getQuakeHistoryInfoRequestDto,
-  getQuakeHistoryInfoResponseDto,
-} from 'src/application/interfaces/dto/quakeHistoryInfoDto';
+} from 'src/domain/enum/quakeHistrory/earthquakeEnum';
+import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
+
 import { QuakeService } from 'src/application/services/quakeService';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
+import {
+  getQuakeHistoryInfoResponseDto,
+  getQuakeHistoryInfoRequestDto,
+} from 'src/application/dto/quakeHistoryInfoDto';
 
 jest.mock('src/application/services/quakeService');
 

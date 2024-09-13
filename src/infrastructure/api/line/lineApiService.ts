@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { URLSearchParams } from 'url';
-import { getChannelAccessTokenResponseDto } from 'src/application/interfaces/dto/channelAccessTokenDto';
+import { getChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 
 /**
  * LINE APIサービス

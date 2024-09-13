@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as jose from 'node-jose';
 import { LineApiService } from 'src/infrastructure/api/line/lineApiService';
-import { getChannelAccessTokenResponseDto } from '../interfaces/dto/channelAccessTokenDto';
+import { getChannelAccessTokenResponseDto } from '../dto/channelAccessTokenDto';
 
 /**
  * アクセストークンサービス
