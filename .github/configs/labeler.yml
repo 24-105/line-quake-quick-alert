@@ -11,6 +11,10 @@ infrastructure:
   - changed-files:
       - any-glob-to-any-file: 'src/infrastructure/**'
 
+modules:
+  - changed-files:
+      - any-glob-to-any-file: 'src/modules/**'
+
 presentation:
   - changed-files:
       - any-glob-to-any-file: 'src/presentation/**'
@@ -18,6 +22,10 @@ presentation:
 .github:
   - changed-files:
       - any-glob-to-any-file: '.github/**'
+
+public:
+  - changed-files:
+      - any-glob-to-any-file: 'public/**'
 
 test:
   - changed-files:
