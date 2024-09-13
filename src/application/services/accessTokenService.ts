@@ -11,8 +11,6 @@ import { IAccessTokenService } from 'src/domain/interfaces/services/accessTokenS
 export class AccessTokenService implements IAccessTokenService {
   private readonly logger = new Logger(AccessTokenService.name);
   private readonly GENERATE_JWT_LOG = 'Generating JWT';
-  private readonly REQUEST_ACCESS_TOKEN_LOG =
-    'Requesting channel access token from the LINE Messaging API.';
   private readonly GENERATE_JWT_ERROR_LOG = 'Failed to generate JWT';
 
   constructor(
@@ -63,7 +61,6 @@ export class AccessTokenService implements IAccessTokenService {
   async getChannelAccessToken(
     jwt: string,
   ): Promise<getChannelAccessTokenResponseDto> {
-    this.logger.log(this.REQUEST_ACCESS_TOKEN_LOG);
     return await this.lineMessagingApiService.getChannelAccessToken(jwt);
   }
 }
