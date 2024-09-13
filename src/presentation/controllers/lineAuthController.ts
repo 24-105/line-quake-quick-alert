@@ -1,5 +1,6 @@
 import { Controller, Get, Logger } from '@nestjs/common';
-import { getChannelAccessTokenResponseDto } from 'src/application/interfaces/dto/channelAccessTokenDto';
+import { getChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
+
 import { AccessTokenService } from 'src/application/services/accessTokenService';
 
 /**

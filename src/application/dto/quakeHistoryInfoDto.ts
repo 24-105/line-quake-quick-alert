@@ -7,13 +7,17 @@ import {
   IsString,
   Min,
 } from '@nestjs/class-validator';
-import { IssueCorrect, IssueType } from '../enum/quakeHistrory/issueEnum';
+
+import { Type } from 'class-transformer';
 import {
   EarthquakeDomesticTsunami,
   EarthquakeForeignTsunami,
-} from '../enum/quakeHistrory/earthquakeEnum';
-import { PointsScale } from '../enum/quakeHistrory/pointsEnum';
-import { Type } from 'class-transformer';
+} from 'src/domain/enum/quakeHistrory/earthquakeEnum';
+import {
+  IssueType,
+  IssueCorrect,
+} from 'src/domain/enum/quakeHistrory/issueEnum';
+import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 
 // 地震情報取得APIリクエスト
 export class getQuakeHistoryInfoRequestDto {

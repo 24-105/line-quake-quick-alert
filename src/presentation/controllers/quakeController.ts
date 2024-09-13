@@ -9,7 +9,8 @@ import {
 import {
   getQuakeHistoryInfoRequestDto,
   getQuakeHistoryInfoResponseDto,
-} from 'src/application/interfaces/dto/quakeHistoryInfoDto';
+} from 'src/application/dto/quakeHistoryInfoDto';
+
 import { QuakeService } from 'src/application/services/quakeService';
 
 /**
