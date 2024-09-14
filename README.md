@@ -3,19 +3,23 @@
 - 日本気象庁のコンテンツ利用規約に従い、情報の編集や加工を行っています。出典：気象庁ホームページ（同上）
 - 本アプリでは、P2P地震情報の提供される情報を利用しています。出典：P2P地震情報（https://www.p2pquake.net/develop/json_api_v2/#/）
 - 本アプリの利用に起因する損害について、当方は一切の責任を負いません。また、提供する情報の正確性も保証いたしません。
-  
+
+---
+
 # アプリ名：地震アラート
 ## サイト概要
 ### サイトテーマ
 「地震アラート」は、日本国内の地震情報を迅速に通知するためのリアルタイム警告LINE公式アカウントです。LINEを通じてユーザーが登録した地域に地震が発生した場合、迅速に情報を受け取ることができます。
 
 ---
+
 # App Name: Earthquake Alert
 
 ## Site Overview
 
 ### Site Theme
 "Earthquake Alert" is a real-time warning LINE official account designed to quickly notify users about earthquake information in Japan. When an earthquake occurs in a region registered by the user, they will receive timely information via LINE.
+
 ---
 
 ### テーマを選んだ理由
@@ -44,10 +48,26 @@
 
 ## 技術スタック
 - フロントエンド: LINE Messaging API
-- バックエンド: NestJS
-  - AWS EC2上で動作するNestJSアプリケーション
-  - DynamoDBを利用してユーザーと地震情報の管理
-  - 外部APIを用いて日本気象庁からの地震データを取得
+- バックエンド:
+  - 言語： TypeScript
+  - 実行環境： Node.js v20.x
+  - フレームワーク： NestJS v10.x
+  - OS： macOS v14.x
+  - 外部API：
+    - P2P地震情報
+    - LINE Messaging API
+- インフラ：
+  - AWS：
+    - EC2
+    - DynamoDB
+- 開発
+  - IDE： Visual Studio Code v1.93.x
+  - テスト： Jest v29.x
+  - コミットメッセージ検証：
+    - husly v9.x
+    - @commitlint v19.x
+  - コード整形： eslint v9.x
+  - GitHub Copilot
 
 ## インフラ構成
 
@@ -126,14 +146,17 @@ $ docker-compose down
 
 ## Compile and run the project
 ```bash
-# development
-$ npm run start
+# local mode
+$ npm run start:local
 
-# watch mode
+# development mode
 $ npm run start:dev
 
 # production mode
-$ npm run start:prod
+$ npm run start:prd
+
+# watch mode
+$ npm run start:debug
 ```
 
 ## Run tests
