@@ -1,13 +1,22 @@
 # 注意書き
 - 本アプリは、日本気象庁のコンテンツ利用規約に基づき、同庁から提供される情報を利用しています。出典：気象庁ホームページ（https://www.jma.go.jp/jma/kishou/info/coment.html）
 - 日本気象庁のコンテンツ利用規約に従い、情報の編集や加工を行っています。出典：気象庁ホームページ（同上）
-- 本アプリでは、P2P地震情報のAPIを使用しています。出典：P2P地震情報（https://www.p2pquake.net/develop/json_api_v2/#/）
+- 本アプリでは、P2P地震情報の提供される情報を利用しています。出典：P2P地震情報（https://www.p2pquake.net/develop/json_api_v2/#/）
 - 本アプリの利用に起因する損害について、当方は一切の責任を負いません。また、提供する情報の正確性も保証いたしません。
   
 # アプリ名：地震アラート
 ## サイト概要
 ### サイトテーマ
 「地震アラート」は、日本国内の地震情報を迅速に通知するためのリアルタイム警告LINE公式アカウントです。LINEを通じてユーザーが登録した地域に地震が発生した場合、迅速に情報を受け取ることができます。
+
+---
+# App Name: Earthquake Alert
+
+## Site Overview
+
+### Site Theme
+"Earthquake Alert" is a real-time warning LINE official account designed to quickly notify users about earthquake information in Japan. When an earthquake occurs in a region registered by the user, they will receive timely information via LINE.
+---
 
 ### テーマを選んだ理由
 背景: 日本は地震が頻発する国であり、即時性のある情報を受け取ることは非常に重要です。既存の防災システムはありますが、個々のユーザーに特化した通知やアラート機能を持つアプリケーションはまだ不十分です。
@@ -45,13 +54,77 @@
 ![alt text](public/image/line-quake-quick-alert-infra.jpg)
 
 ## Project setup
+### Project clone to local
+```bash
+$ git clone https://github.com/24-105/line-quake-quick-alert.git
+```
 
+### Install Node.js
+```bash
+## using homebrew
+$ brew install node@20
+
+## using volta
+$ volta install node@20
+```
+
+### Check version
+```bash
+$ node -v
+$ npm -v
+```
+
+### Install the package
 ```bash
 $ npm install
 ```
 
-## Compile and run the project
+### Compile
+```bash
+$ npx tsc
+```
 
+## Docker setup
+### Make directory
+```bash
+$ mkdir -p ./docker/dynamodb
+```
+
+### Creating and starting multiple containers
+```bash
+$ docker-compose up -d
+```
+
+### Check docker container
+```bash
+$ docker-compose ps
+$ docker-compose logs dynamodb-local
+$ docker-compose logs dynamodb-admin
+```
+
+### Creat dynamodb tablel
+```bash
+$ npx ts-node src/migration/dynamodb/acccessToken.ts
+$ npx ts-node src/migration/dynamodb/quakeHistory.ts
+```
+
+### Check if table was created
+```bash
+$ brew install awscli
+$ aws dynamodb list-tables --endpoint-url http://localhost:8000
+```
+
+### Delete dynamodb tablel
+```bash
+$ aws dynamodb delete-table --table-name AccessToken --endpoint-url http://localhost:8000
+$ aws dynamodb delete-table --table-name QuakeHistory --endpoint-url http://localhost:8000
+```
+### Stopping and removing containers
+```bash
+$ docker-compose down
+```
+
+## Compile and run the project
 ```bash
 # development
 $ npm run start
