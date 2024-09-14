@@ -14,8 +14,8 @@ import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 import { QuakeService } from 'src/application/services/quakeService';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
 import {
-  getQuakeHistoryInfoResponseDto,
-  getQuakeHistoryInfoRequestDto,
+  fetchQuakeHistoryInfoResponseDto,
+  fetchQuakeHistoryInfoRequestDto,
 } from 'src/application/dto/quakeHistoryInfoDto';
 
 jest.mock('src/application/services/quakeService');
@@ -43,7 +43,7 @@ describe('QuakeController', () => {
   describe('fetchQuakeHistoryInfo', () => {
     it('should return earthquake history data', async () => {
       // モックデータ
-      const mockResponse: getQuakeHistoryInfoResponseDto[] = [
+      const mockResponse: fetchQuakeHistoryInfoResponseDto[] = [
         {
           id: '1',
           code: 551,
@@ -87,7 +87,7 @@ describe('QuakeController', () => {
         .mockResolvedValue(mockResponse);
 
       // リクエストDTO
-      const request: getQuakeHistoryInfoRequestDto = {
+      const request: fetchQuakeHistoryInfoRequestDto = {
         limit: 1,
         offset: 0,
       };

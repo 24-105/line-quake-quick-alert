@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 // LINEチャンネルアクセストークンレスポンスDTO
-export class getChannelAccessTokenResponseDto {
+export class fetchChannelAccessTokenResponseDto {
   @IsNotEmpty()
   @IsString()
   access_token: string;

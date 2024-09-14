@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { URLSearchParams } from 'url';
-import { getChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
+import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 import { ILineMessagingApiService } from 'src/domain/interfaces/api/lineApiService';
 
 /**
@@ -12,9 +12,9 @@ import { ILineMessagingApiService } from 'src/domain/interfaces/api/lineApiServi
 export class LineMessagingApiService implements ILineMessagingApiService {
   private readonly logger = new Logger(LineMessagingApiService.name);
   private readonly REQUEST_ACCESS_TOKEN_LOG =
-    'Requesting channel access token from the LINE Messaging API.';
-  private readonly GET_ACCESS_TOKEN_ERROR_LOG =
-    'Failed to get channel access token';
+    'Requesting channel access token from the LINE Messaging API';
+  private readonly FETCH_ACCESS_TOKEN_ERROR_LOG =
+    'Failed to fetch channel access token';
 
   constructor(private readonly httpService: HttpService) {}
 
@@ -24,9 +24,9 @@ export class LineMessagingApiService implements ILineMessagingApiService {
    * @param jwt JWT
    * @returns チャンネルアクセストークン
    */
-  async getChannelAccessToken(
+  async fetchChannelAccessToken(
     jwt: string,
-  ): Promise<getChannelAccessTokenResponseDto> {
+  ): Promise<fetchChannelAccessTokenResponseDto> {
     const url = 'https://api.line.me/oauth2/v2.1/token';
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const params = new URLSearchParams();
@@ -37,15 +37,13 @@ export class LineMessagingApiService implements ILineMessagingApiService {
     );
     params.append('client_assertion', jwt);
 
-    this.logger.log(this.REQUEST_ACCESS_TOKEN_LOG);
-
     try {
-      const response = await firstValueFrom(
+      this.logger.log(this.REQUEST_ACCESS_TOKEN_LOG);
+      return await firstValueFrom(
         this.httpService.post(url, params.toString(), { headers }),
-      );
-      return response.data;
+      ).then((response) => response.data);
     } catch (err) {
-      this.logger.error(this.GET_ACCESS_TOKEN_ERROR_LOG, err.stack);
+      this.logger.error(this.FETCH_ACCESS_TOKEN_ERROR_LOG, err.stack);
       throw err;
     }
   }

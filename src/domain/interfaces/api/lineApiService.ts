@@ -1,8 +1,10 @@
-import { getChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
+import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 
 /**
  * LINE Messaging APIサービスインターフェース
  */
 export interface ILineMessagingApiService {
-  getChannelAccessToken(jwt: string): Promise<getChannelAccessTokenResponseDto>;
+  fetchChannelAccessToken(
+    jwt: string,
+  ): Promise<fetchChannelAccessTokenResponseDto>;
 }
