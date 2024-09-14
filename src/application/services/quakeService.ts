@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
-import { getQuakeHistoryInfoResponseDto } from '../dto/quakeHistoryInfoDto';
+import { fetchQuakeHistoryInfoResponseDto } from '../dto/quakeHistoryInfoDto';
 import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 
 /**
@@ -9,6 +9,9 @@ import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 @Injectable()
 export class QuakeService implements IQuakeService {
   private readonly logger = new Logger(QuakeService.name);
+  private readonly REQUEST_FETCH_QUAKE_HISTORY_LOG =
+    'Requesting fetch quake history';
+
   constructor(private readonly p2pQuakeApiService: P2pQuakeApiService) {}
 
   /**
@@ -20,8 +23,8 @@ export class QuakeService implements IQuakeService {
   async fetchQuakeHistoryInfo(
     limit?: number,
     offset?: number,
-  ): Promise<getQuakeHistoryInfoResponseDto[]> {
-    this.logger.log(`Requesting ${limit} records from the Quake API.`);
+  ): Promise<fetchQuakeHistoryInfoResponseDto[]> {
+    this.logger.log(`${this.REQUEST_FETCH_QUAKE_HISTORY_LOG}`);
     return await this.p2pQuakeApiService.fetchP2pQuakeHistoryInfo(
       limit,
       offset,

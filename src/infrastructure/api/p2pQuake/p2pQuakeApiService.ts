@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { getQuakeHistoryInfoResponseDto } from 'src/application/dto/quakeHistoryInfoDto';
+import { fetchQuakeHistoryInfoResponseDto } from 'src/application/dto/quakeHistoryInfoDto';
 
 /**
  * P2P地震APIサービス
@@ -9,6 +9,11 @@ import { getQuakeHistoryInfoResponseDto } from 'src/application/dto/quakeHistory
 @Injectable()
 export class P2pQuakeApiService {
   private readonly logger = new Logger(P2pQuakeApiService.name);
+  private readonly REQUEST_QUAKE_HISTORY_INFO_LOG =
+    'Fetching quake history info from the P2P Quake API';
+  private readonly FETCH_QUAKE_HISTORY_ERROR_LOG =
+    'Failed to fetch quake history info';
+
   constructor(private readonly httpService: HttpService) {}
 
   /**
@@ -21,7 +26,7 @@ export class P2pQuakeApiService {
   async fetchP2pQuakeHistoryInfo(
     limit?: number,
     offset?: number,
-  ): Promise<getQuakeHistoryInfoResponseDto[]> {
+  ): Promise<fetchQuakeHistoryInfoResponseDto[]> {
     const url = 'https://api.p2pquake.net/v2/history';
     const code = 551;
     const params = {
@@ -29,14 +34,15 @@ export class P2pQuakeApiService {
       limit: limit,
       offset: offset,
     };
+
     try {
-      this.logger.log(`Fetching ${limit} earthquake records.`);
+      this.logger.log(`${this.REQUEST_QUAKE_HISTORY_INFO_LOG}`);
       const response = await firstValueFrom(
         this.httpService.get(url, { params }),
       );
       return response.data;
     } catch (err) {
-      this.logger.error('Failed to fetch earthquake data.', err.stack);
+      this.logger.error(`${this.FETCH_QUAKE_HISTORY_ERROR_LOG}`, err.stack);
       throw err;
     }
   }

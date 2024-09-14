@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as jose from 'node-jose';
-import { getChannelAccessTokenResponseDto } from '../dto/channelAccessTokenDto';
+import { fetchChannelAccessTokenResponseDto } from '../dto/channelAccessTokenDto';
 import { LineMessagingApiService } from 'src/infrastructure/api/line/lineMessagingApiService';
 import { IAccessTokenService } from 'src/domain/interfaces/services/accessTokenService';
 
@@ -10,8 +10,10 @@ import { IAccessTokenService } from 'src/domain/interfaces/services/accessTokenS
 @Injectable()
 export class AccessTokenService implements IAccessTokenService {
   private readonly logger = new Logger(AccessTokenService.name);
-  private readonly GENERATE_JWT_LOG = 'Generating JWT';
+  private readonly REQUEST_GENERATE_JWT_LOG = 'Requesting generating JWT';
   private readonly GENERATE_JWT_ERROR_LOG = 'Failed to generate JWT';
+  private readonly REQUEST_CHANNEL_FETCH_ACCESS_TOKEN_LOG =
+    'Requesting fetch channel access token';
 
   constructor(
     private readonly lineMessagingApiService: LineMessagingApiService,
@@ -22,7 +24,7 @@ export class AccessTokenService implements IAccessTokenService {
    * @returns JWT
    */
   async generateJwt(): Promise<string> {
-    this.logger.log(this.GENERATE_JWT_LOG);
+    this.logger.log(this.REQUEST_GENERATE_JWT_LOG);
 
     const privateKey = process.env.LINE_QUALE_QUICK_ALERT_SECRET_KEY;
 
@@ -58,9 +60,10 @@ export class AccessTokenService implements IAccessTokenService {
    * @param jwt JWT
    * @returns チャンネルアクセストークン
    */
-  async getChannelAccessToken(
+  async fetchChannelAccessToken(
     jwt: string,
-  ): Promise<getChannelAccessTokenResponseDto> {
-    return await this.lineMessagingApiService.getChannelAccessToken(jwt);
+  ): Promise<fetchChannelAccessTokenResponseDto> {
+    this.logger.log(this.REQUEST_CHANNEL_FETCH_ACCESS_TOKEN_LOG);
+    return await this.lineMessagingApiService.fetchChannelAccessToken(jwt);
   }
 }

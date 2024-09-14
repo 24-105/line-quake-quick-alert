@@ -20,7 +20,7 @@ import {
 import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 
 // 地震情報取得APIリクエスト
-export class getQuakeHistoryInfoRequestDto {
+export class fetchQuakeHistoryInfoRequestDto {
   @IsOptional()
   @IsInt()
   @Min(1)
@@ -114,7 +114,7 @@ class QuakeHistoryComments {
 }
 
 // 地震情報取得APIレスポンス
-export class getQuakeHistoryInfoResponseDto {
+export class fetchQuakeHistoryInfoResponseDto {
   @IsNotEmpty()
   @IsString()
   id: string;
