@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
 import { fetchQuakeHistoryInfoResponseDto } from '../dto/quakeHistoryInfoDto';
 import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 /**
  * 地震情報サービスロジック
@@ -20,6 +21,7 @@ export class QuakeService implements IQuakeService {
    * @param offset 読み飛ばす件数
    * @returns 地震情報DTO
    */
+  @Cron(CronExpression.EVERY_10_SECONDS)
   async fetchQuakeHistoryInfo(
     limit?: number,
     offset?: number,
