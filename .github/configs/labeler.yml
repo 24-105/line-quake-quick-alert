@@ -58,8 +58,6 @@ refactor:
   - head-branch: ['^refactor/']
 style:
   - head-branch: ['^style/']
-test:
-  - head-branch: ['^test/']
 fix:
   - head-branch: ['^fix/']
 hotfix:
