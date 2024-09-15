@@ -146,8 +146,8 @@ $ docker-compose logs dynamodb-admin
 ### Creat dynamodb tablel
 
 ```bash
-$ npx ts-node src/migration/dynamodb/acccessToken.ts
-$ npx ts-node src/migration/dynamodb/quakeHistory.ts
+$ NODE_ENV=local npx ts-node src/migration/dynamodb/acccessToken.ts
+$ NODE_ENV=local npx ts-node src/migration/dynamodb/quakeHistory.ts
 ```
 
 ### Check if table was created
