@@ -174,12 +174,15 @@ $ npm run test:cov
 
 ## Recommended commit message
 ```bash
-- fix：バグ修正（Bug fixes）
-- hotfix：緊急性の高いバグ修正（Urgent bug fix）
-- feat：機能追加（Added functionality）
-- remove：機能削除（Function removed）
-- docs：ドキュメント整理（Organizing documents）
-- refactor：リファクタリング（Refactoring code）
+- build: ビルドシステムまたは外部依存関係に影響する変更
+- ci: CI構成ファイルとスクリプトへの変更
+- docs: ドキュメントのみの変更
+- feat: 新機能
+- fix: バグ修正
+- perf: パフォーマンスの向上
+- refactor: リファクタリング
+- style: コードの意味に影響しない変更
+- test: 不足しているテストの追加または既存のテストの修正
 ```
 
 ## Powered by NestJS
