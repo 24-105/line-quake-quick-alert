@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
-import { fetchQuakeHistoryResponse } from '../dto/quakeHistoryDto';
+import { fetchP2pQuakeHistoryResponseDto } from '../dto/p2pQuakeHistoryDto';
 import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { convertToUnixTime, getJstTime } from 'src/domain/useCase/dateUseCase';
@@ -13,6 +13,8 @@ import { QUAKE_HISTORY_VALID_TIME } from 'src/config/constants';
 @Injectable()
 export class QuakeService implements IQuakeService {
   private readonly logger = new Logger(QuakeService.name);
+  private readonly START_FETCH_QUAKE_HISTORY_BATCH_LOG =
+    'Start fetch quake history batch';
   private readonly REQUEST_FETCH_QUAKE_HISTORY_LOG =
     'Requesting fetch quake history';
   private readonly HISTORY_NOT_FOUND_ERROR_LOG = 'No quake history found';
@@ -32,7 +34,8 @@ export class QuakeService implements IQuakeService {
    * @returns 地震情報DTO
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
-  async fetchQuakeHistoryBatch(): Promise<fetchQuakeHistoryResponse[]> {
+  async fetchQuakeHistoryBatch(): Promise<fetchP2pQuakeHistoryResponseDto[]> {
+    this.logger.log(this.START_FETCH_QUAKE_HISTORY_BATCH_LOG);
     const codes = 551; // 固定引数
     const limit = 1; // 固定引数
     const offset = 0; // 固定引数
@@ -50,8 +53,8 @@ export class QuakeService implements IQuakeService {
     codes: number,
     limit: number,
     offset: number,
-  ): Promise<fetchQuakeHistoryResponse[]> {
-    this.logger.log(`${this.REQUEST_FETCH_QUAKE_HISTORY_LOG}`);
+  ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
+    this.logger.log(this.REQUEST_FETCH_QUAKE_HISTORY_LOG);
 
     // P2P地震APIから地震情報を取得
     const quakeHistory = await this.p2pQuakeApiService.fetchP2pQuakeHistory(
@@ -62,30 +65,28 @@ export class QuakeService implements IQuakeService {
 
     // 地震情報が取得できなかった場合
     if (quakeHistory.length === 0) {
-      this.logger.error(this.HISTORY_NOT_FOUND_ERROR_LOG);
-      return [];
+      throw new Error(this.HISTORY_NOT_FOUND_ERROR_LOG);
     }
-
-    // 地震の最新履歴を取得
-    const history = quakeHistory[0];
 
     // 現在時刻を取得
     const jstTimeNow = getJstTime();
     const unixTimeNow = convertToUnixTime(jstTimeNow);
 
-    // 地震の発生時間を検証
-    this.logger.log(`Event time is ${history.earthquake.time} verify start`);
-    if (await this.verifyEventTime(unixTimeNow, history.earthquake.time)) {
-      return quakeHistory;
-    }
+    for (const history of quakeHistory) {
+      // 地震の発生時間を検証
+      this.logger.log(`Event time is ${history.earthquake.time} verify start`);
+      if (await this.verifyEventTime(unixTimeNow, history.earthquake.time)) {
+        continue;
+      }
 
-    // 地震IDが地震履歴テーブルに存在するか確認
-    this.logger.log(`Quake ID ${history.id} check start`);
-    const idExists = await this.dynamodbRepository.checkIfQuakeIDExists(
-      history.id,
-    );
-    if (idExists) {
-      return quakeHistory;
+      // 地震IDが地震履歴テーブルに存在するか確認
+      this.logger.log(`Quake ID ${history.id} check start`);
+      const idExists = await this.dynamodbRepository.checkIfQuakeIDExists(
+        history.id,
+      );
+      if (idExists) {
+        continue;
+      }
     }
 
     return quakeHistory;

@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import {
   FetchP2pQuakeHistoryRequestDto,
-  fetchQuakeHistoryResponse,
+  fetchP2pQuakeHistoryResponseDto,
 } from 'src/application/dto/quakeHistoryDto';
 import { IP2pQuakeApiService } from 'src/domain/interfaces/api/p2pQuakeApiService';
 
@@ -32,13 +32,13 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
     codes: number,
     limit: number,
     offset: number,
-  ): Promise<fetchQuakeHistoryResponse[]> {
+  ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
     // リクエストパラメータを作成
     const params = this.createParams(codes, limit, offset);
 
     // P2P地震情報APIから地震情報を取得
     try {
-      this.logger.log(`${this.REQUEST_QUAKE_HISTORY_LOG}`);
+      this.logger.log(this.REQUEST_QUAKE_HISTORY_LOG);
       const response = await firstValueFrom(
         this.httpService.get(process.env.P2P_GET_QUAKE_HISTORY_URL, { params }),
       );
@@ -54,7 +54,7 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
    * @param code 地震情報コード
    * @param limit 返却件数
    * @param offset 読み飛ばす件数
-   * @returns P2P地震情報取得APIリクエストDTO
+   * @returns P2P地震情報取得APIリクエストDTO1
    */
   private createParams(
     codes: number,

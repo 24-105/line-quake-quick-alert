@@ -1,4 +1,4 @@
-import { fetchQuakeHistoryResponse } from 'src/application/dto/quakeHistoryDto';
+import { fetchP2pQuakeHistoryResponseDto } from 'src/application/dto/quakeHistoryDto';
 
 /**
  * 地震情報サービスインターフェース
@@ -8,5 +8,5 @@ export interface IQuakeService {
     codes: number,
     limit: number,
     offset: number,
-  ): Promise<fetchQuakeHistoryResponse[]>;
+  ): Promise<fetchP2pQuakeHistoryResponseDto[]>;
 }
