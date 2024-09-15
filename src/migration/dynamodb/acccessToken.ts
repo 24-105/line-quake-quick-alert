@@ -19,7 +19,7 @@ const client = new DynamoDBClient({
   credentials: credentials,
 });
 
-// アクセストークンテーブルを作成する
+// チャンネルアクセストークンテーブルを作成する
 const createTable = async () => {
   const params = {
     AttributeDefinitions: [
@@ -62,7 +62,7 @@ const enableTTL = async () => {
   }
 };
 
-// テーブル作成後にTTLを有効化する
+// チャンネルアクセストークンテーブルを構築する
 const setupAccessTokenTable = async () => {
   await createTable();
   await enableTTL();
