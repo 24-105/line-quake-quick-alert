@@ -27,9 +27,9 @@ export class QuakeController {
   constructor(private readonly quakeService: QuakeService) {}
 
   /**
-   * 地震履歴を取得する
+   * 地震情報を取得する
    * @param request リクエストパラメーター
-   * @returns 地震履歴DTO
+   * @returns 地震情報DTO
    */
   @Get('history')
   @UsePipes(new ValidationPipe({ transform: true }))

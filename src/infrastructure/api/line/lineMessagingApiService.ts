@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { URLSearchParams } from 'url';
 import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
-import { ILineMessagingApiService } from 'src/domain/interfaces/api/lineApiService';
+import { ILineMessagingApiService } from 'src/domain/interfaces/api/iineMessagingApiService';
 
 /**
  * LINE Messaging APIサービス

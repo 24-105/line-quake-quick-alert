@@ -8,7 +8,7 @@ import {
 import { IP2pQuakeApiService } from 'src/domain/interfaces/api/p2pQuakeApiService';
 
 /**
- * P2P地震APIサービス
+ * P2P地震情報APIサービス
  */
 @Injectable()
 export class P2pQuakeApiService implements IP2pQuakeApiService {
@@ -21,12 +21,12 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
   constructor(private readonly httpService: HttpService) {}
 
   /**
-   * 地震履歴をP2P地震情報APIから取得する
+   * 地震情報をP2P地震情報APIから取得する
    * https://www.p2pquake.net/develop/json_api_v2/#/P2P%E5%9C%B0%E9%9C%87%E6%83%85%E5%A0%B1%20API/get_history
    * @param codes 地震情報コード
    * @param limit 返却件数
    * @param offset 読み飛ばす件数
-   * @returns 地震履歴DTO
+   * @returns 地震情報DTO
    */
   async fetchP2pQuakeHistory(
     codes: number,
@@ -36,7 +36,7 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
     // リクエストパラメータを作成
     const params = this.createParams(codes, limit, offset);
 
-    // P2P地震情報APIから地震履歴を取得
+    // P2P地震情報APIから地震情報を取得
     try {
       this.logger.log(`${this.REQUEST_QUAKE_HISTORY_LOG}`);
       const response = await firstValueFrom(
@@ -54,7 +54,7 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
    * @param code 地震情報コード
    * @param limit 返却件数
    * @param offset 読み飛ばす件数
-   * @returns P2P地震履歴取得APIリクエストDTO
+   * @returns P2P地震情報取得APIリクエストDTO
    */
   private createParams(
     codes: number,
