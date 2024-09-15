@@ -24,7 +24,7 @@ export class P2pQuakeApiService {
    * @returns 地震情報DTO
    */
   async fetchP2pQuakeHistoryInfo(
-    limit?: number,
+    limit: number = 3,
     offset?: number,
   ): Promise<fetchQuakeHistoryInfoResponseDto[]> {
     const url = 'https://api.p2pquake.net/v2/history';
