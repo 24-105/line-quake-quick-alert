@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import {
   fetchQuakeHistoryRequestDto,
-  fetchQuakeHistoryResponse,
+  fetchP2pQuakeHistoryResponseDto,
 } from 'src/application/dto/quakeHistoryDto';
 
 import { QuakeService } from 'src/application/services/quakeService';
@@ -35,7 +35,7 @@ export class QuakeController {
   @UsePipes(new ValidationPipe({ transform: true }))
   async fetchQuakeHistory(
     @Query() request: fetchQuakeHistoryRequestDto,
-  ): Promise<fetchQuakeHistoryResponse[]> {
+  ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
     this.logger.log(this.REQUEST_FETCH_QUAKE_HISTORY_LOG);
 
     const { codes, limit, offset } = request;

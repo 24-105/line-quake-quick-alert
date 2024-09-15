@@ -14,7 +14,7 @@ import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 import { QuakeService } from 'src/application/services/quakeService';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
 import {
-  fetchQuakeHistoryResponse,
+  fetchP2pQuakeHistoryResponseDto,
   fetchQuakeHistoryRequestDto,
 } from 'src/application/dto/quakeHistoryDto';
 
@@ -43,7 +43,7 @@ describe('QuakeController', () => {
   describe('fetchQuakeHistory', () => {
     it('should return earthquake history data', async () => {
       // モックデータ
-      const mockResponse: fetchQuakeHistoryResponse[] = [
+      const mockResponse: fetchP2pQuakeHistoryResponseDto[] = [
         {
           id: '1',
           code: 551,

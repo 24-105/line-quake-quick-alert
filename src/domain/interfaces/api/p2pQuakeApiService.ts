@@ -1,4 +1,4 @@
-import { fetchQuakeHistoryResponse } from 'src/application/dto/quakeHistoryDto';
+import { fetchP2pQuakeHistoryResponseDto } from 'src/application/dto/quakeHistoryDto';
 
 /**
  * P2P地震APIサービスインターフェース
@@ -8,5 +8,5 @@ export interface IP2pQuakeApiService {
     codes: number,
     limit: number,
     offset: number,
-  ): Promise<fetchQuakeHistoryResponse[]>;
+  ): Promise<fetchP2pQuakeHistoryResponseDto[]>;
 }

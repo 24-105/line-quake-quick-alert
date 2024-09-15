@@ -1,12 +1,12 @@
 import {
   IsBoolean,
-  IsInt,
   IsNotEmpty,
   IsNumber,
   IsString,
   Min,
 } from '@nestjs/class-validator';
 import { Type } from 'class-transformer';
+import { IsInt } from 'class-validator';
 
 import {
   EarthquakeDomesticTsunami,
