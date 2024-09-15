@@ -1,7 +1,19 @@
 # Directory pattern
+github:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+public:
+  - changed-files:
+      - any-glob-to-any-file: 'public/**'
+
 application:
   - changed-files:
       - any-glob-to-any-file: 'src/application/**'
+
+config:
+  - changed-files:
+      - any-glob-to-any-file: 'src/config/**'
 
 domain:
   - changed-files:
@@ -11,6 +23,10 @@ infrastructure:
   - changed-files:
       - any-glob-to-any-file: 'src/infrastructure/**'
 
+migration:
+  - changed-files:
+      - any-glob-to-any-file: 'src/migration/**'
+
 modules:
   - changed-files:
       - any-glob-to-any-file: 'src/modules/**'
@@ -19,13 +35,9 @@ presentation:
   - changed-files:
       - any-glob-to-any-file: 'src/presentation/**'
 
-.github:
+appCore:
   - changed-files:
-      - any-glob-to-any-file: '.github/**'
-
-public:
-  - changed-files:
-      - any-glob-to-any-file: 'public/**'
+      - any-glob-to-any-file: ['src/app.module.ts', 'src/main.ts']
 
 test:
   - changed-files:
@@ -34,7 +46,21 @@ test:
 # Branch pattern
 feature:
   - head-branch: ['^feature/']
+build:
+  - head-branch: ['^build/']
+ci:
+  - head-branch: ['^ci/']
+docs:
+  - head-branch: ['^docs/']
+pref:
+  - head-branch: ['^pref/']
+refactor:
+  - head-branch: ['^refactor/']
+style:
+  - head-branch: ['^style/']
 fix:
   - head-branch: ['^fix/']
 hotfix:
   - head-branch: ['^hotfix/']
+release:
+  - head-branch: ['^release/']
