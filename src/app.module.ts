@@ -4,6 +4,9 @@ import { LineModule } from './modules/lineModule';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 
+/**
+ * アプリケーションモジュール
+ */
 @Module({
   imports: [
     ConfigModule.forRoot({

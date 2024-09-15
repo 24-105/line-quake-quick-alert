@@ -1,10 +1,10 @@
 import { fetchQuakeHistoryResponse } from 'src/application/dto/quakeHistoryDto';
 
 /**
- * 地震情報サービスインターフェース
+ * P2P地震APIサービスインターフェース
  */
-export interface IQuakeService {
-  fetchQuakeHistory(
+export interface IP2pQuakeApiService {
+  fetchP2pQuakeHistory(
     codes: number,
     limit: number,
     offset: number,

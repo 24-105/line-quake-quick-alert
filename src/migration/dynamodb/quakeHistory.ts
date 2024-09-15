@@ -5,29 +5,36 @@ import {
   ScalarAttributeType,
   KeyType,
 } from '@aws-sdk/client-dynamodb';
+import * as dotenv from 'dotenv';
+
+// 実行環境を取得
+const env = process.env.NODE_ENV || 'local';
+
+// 環境変数ファイルをロード
+dotenv.config({ path: `.env.${env}` });
 
 // 環境変数からクレデンシャルを取得
 const credentials = {
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'dummyAccessKeyId',
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'dummySecretAccessKey',
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 };
 
 // DynamoDBクライアントを作成する
 const client = new DynamoDBClient({
-  region: 'ap-northeast-1',
-  endpoint: 'http://localhost:8000',
+  region: process.env.AWS_REGION,
+  endpoint: process.env.DYNAMODB_ENDPOINT,
   credentials: credentials,
 });
 
-// 地震情報テーブルを作成する
+// 地震履歴テーブルを作成する
 const createTable = async () => {
   const params = {
     AttributeDefinitions: [
-      { AttributeName: 'quakeHistory', AttributeType: ScalarAttributeType.S },
+      { AttributeName: 'quakeID', AttributeType: ScalarAttributeType.S },
       ,
     ],
     TableName: 'QuakeHistory',
-    KeySchema: [{ AttributeName: 'quakeHistory', KeyType: KeyType.HASH }],
+    KeySchema: [{ AttributeName: 'quakeID', KeyType: KeyType.HASH }],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
       WriteCapacityUnits: 1,
@@ -62,7 +69,7 @@ const enableTTL = async () => {
   }
 };
 
-// 地震情報テーブルを構築する
+// 地震履歴テーブルを構築する
 const setupQuakeHistoryTable = async () => {
   await createTable();
   await enableTTL();
