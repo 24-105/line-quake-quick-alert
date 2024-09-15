@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { fetchQuakeHistoryResponseDto as fetchQuakeHistoryResponseDto } from 'src/application/dto/quakeHistoryDto';
+import { fetchQuakeHistoryResponseDto } from 'src/application/dto/quakeHistoryDto';
 
 /**
  * P2P地震APIサービス
