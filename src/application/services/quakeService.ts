@@ -25,11 +25,11 @@ export class QuakeService implements IQuakeService {
   ) {}
 
   /**
-   * 地震履歴を取得するバッチ
+   * 地震情報を取得するバッチ
    * @param codes 地震情報コード
    * @param limit 返却件数
    * @param offset 読み飛ばす件数
-   * @returns 地震履歴DTO
+   * @returns 地震情報DTO
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
   async fetchQuakeHistoryBatch(): Promise<fetchQuakeHistoryResponse[]> {
@@ -40,11 +40,11 @@ export class QuakeService implements IQuakeService {
   }
 
   /**
-   * 地震履歴を取得する
+   * 地震情報を取得する
    * @param codes 地震情報コード
    * @param limit 返却件数
    * @param offset 読み飛ばす件数
-   * @returns 地震履歴DTO
+   * @returns 地震情報DTO
    */
   async fetchQuakeHistory(
     codes: number,
@@ -53,7 +53,7 @@ export class QuakeService implements IQuakeService {
   ): Promise<fetchQuakeHistoryResponse[]> {
     this.logger.log(`${this.REQUEST_FETCH_QUAKE_HISTORY_LOG}`);
 
-    // P2P地震APIから地震履歴を取得
+    // P2P地震APIから地震情報を取得
     const quakeHistory = await this.p2pQuakeApiService.fetchP2pQuakeHistory(
       codes,
       limit,
@@ -66,7 +66,7 @@ export class QuakeService implements IQuakeService {
       return [];
     }
 
-    // 地震情報の最新履歴を取得
+    // 地震の最新履歴を取得
     const history = quakeHistory[0];
 
     // 現在時刻を取得

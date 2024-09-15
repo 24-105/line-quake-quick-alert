@@ -32,7 +32,7 @@ export class DynamodbRepository implements IDynamodbRepository {
 
   /**
    * 地震IDが地震履歴テーブルに存在するか確認
-   * @param quakeID 地震履歴ID
+   * @param quakeID 地震ID
    * @returns true: 存在する, false: 存在しない
    */
   async checkIfQuakeIDExists(quakeID: string): Promise<boolean> {
