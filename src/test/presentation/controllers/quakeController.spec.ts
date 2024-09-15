@@ -14,9 +14,9 @@ import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 import { QuakeService } from 'src/application/services/quakeService';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
 import {
-  fetchQuakeHistoryInfoResponseDto,
-  fetchQuakeHistoryInfoRequestDto,
-} from 'src/application/dto/quakeHistoryInfoDto';
+  fetchQuakeHistoryResponseDto,
+  fetchQuakeHistoryRequestDto,
+} from 'src/application/dto/quakeHistoryDto';
 
 jest.mock('src/application/services/quakeService');
 
@@ -40,10 +40,10 @@ describe('QuakeController', () => {
     quakeService = module.get<QuakeService>(QuakeService);
   });
 
-  describe('fetchQuakeHistoryInfo', () => {
+  describe('fetchQuakeHistory', () => {
     it('should return earthquake history data', async () => {
       // モックデータ
-      const mockResponse: fetchQuakeHistoryInfoResponseDto[] = [
+      const mockResponse: fetchQuakeHistoryResponseDto[] = [
         {
           id: '1',
           code: 551,
@@ -81,23 +81,23 @@ describe('QuakeController', () => {
         },
       ];
 
-      // QuakeServiceのfetchQuakeHistoryInfoメソッドをモック化
+      // QuakeServiceのfetchQuakeHistoryメソッドをモック化
       jest
-        .spyOn(quakeService, 'fetchQuakeHistoryInfo')
+        .spyOn(quakeService, 'fetchQuakeHistory')
         .mockResolvedValue(mockResponse);
 
       // リクエストDTO
-      const request: fetchQuakeHistoryInfoRequestDto = {
+      const request: fetchQuakeHistoryRequestDto = {
         limit: 1,
         offset: 0,
       };
 
       // コントローラの呼び出し
-      const result = await quakeController.fetchQuakeHistoryInfo(request);
+      const result = await quakeController.fetchQuakeHistory(request);
 
       // 結果の検証
       expect(result).toEqual(mockResponse);
-      expect(quakeService.fetchQuakeHistoryInfo).toHaveBeenCalledWith(1, 0);
+      expect(quakeService.fetchQuakeHistory).toHaveBeenCalledWith(1, 0);
     });
   });
 });

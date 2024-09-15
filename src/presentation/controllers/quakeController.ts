@@ -7,9 +7,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
-  fetchQuakeHistoryInfoRequestDto,
-  fetchQuakeHistoryInfoResponseDto,
-} from 'src/application/dto/quakeHistoryInfoDto';
+  fetchQuakeHistoryRequestDto,
+  fetchQuakeHistoryResponseDto,
+} from 'src/application/dto/quakeHistoryDto';
 
 import { QuakeService } from 'src/application/services/quakeService';
 
@@ -27,27 +27,24 @@ export class QuakeController {
   constructor(private readonly quakeService: QuakeService) {}
 
   /**
-   * 地震情報を取得する
+   * 地震履歴を取得する
    * @param request リクエストパラメーター
-   * @returns 地震情報DTO
+   * @returns 地震履歴DTO
    */
   @Get('history')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async fetchQuakeHistoryInfo(
-    @Query() request: fetchQuakeHistoryInfoRequestDto,
-  ): Promise<fetchQuakeHistoryInfoResponseDto[]> {
+  async fetchQuakeHistory(
+    @Query() request: fetchQuakeHistoryRequestDto,
+  ): Promise<fetchQuakeHistoryResponseDto[]> {
     this.logger.log(this.REQUEST_FETCH_QUAKE_HISTORY_LOG);
 
     const { limit, offset } = request;
 
     try {
       this.logger.log(
-        `Fetching quake history info called with limit: ${limit}, offset: ${offset}`,
+        `Fetching quake history called with limit: ${limit}, offset: ${offset}`,
       );
-      const response = await this.quakeService.fetchQuakeHistoryInfo(
-        limit,
-        offset,
-      );
+      const response = await this.quakeService.fetchQuakeHistory(limit, offset);
       this.logger.log(this.REQUEST_SUCCESS_LOG);
       return response;
     } catch (err) {

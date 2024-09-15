@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
-import { fetchQuakeHistoryInfoResponseDto } from '../dto/quakeHistoryInfoDto';
+import { fetchQuakeHistoryResponseDto } from '../dto/quakeHistoryDto';
 import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -16,20 +16,17 @@ export class QuakeService implements IQuakeService {
   constructor(private readonly p2pQuakeApiService: P2pQuakeApiService) {}
 
   /**
-   * 地震情報を取得する
+   * 地震履歴を取得する
    * @param limit 返却件数
    * @param offset 読み飛ばす件数
-   * @returns 地震情報DTO
+   * @returns 地震履歴DTO
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
-  async fetchQuakeHistoryInfo(
+  async fetchQuakeHistory(
     limit?: number,
     offset?: number,
-  ): Promise<fetchQuakeHistoryInfoResponseDto[]> {
+  ): Promise<fetchQuakeHistoryResponseDto[]> {
     this.logger.log(`${this.REQUEST_FETCH_QUAKE_HISTORY_LOG}`);
-    return await this.p2pQuakeApiService.fetchP2pQuakeHistoryInfo(
-      limit,
-      offset,
-    );
+    return await this.p2pQuakeApiService.fetchP2pQuakeHistory(limit, offset);
   }
 }

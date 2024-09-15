@@ -19,8 +19,8 @@ import {
 } from 'src/domain/enum/quakeHistrory/issueEnum';
 import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 
-// 地震情報取得APIリクエスト
-export class fetchQuakeHistoryInfoRequestDto {
+// 地震履歴取得APIリクエスト
+export class fetchQuakeHistoryRequestDto {
   @IsOptional()
   @IsInt()
   @Min(1)
@@ -34,8 +34,8 @@ export class fetchQuakeHistoryInfoRequestDto {
   offset?: number;
 }
 
-// 地震情報概要
-class QuakeHistoryInfoIssue {
+// 地震履歴概要
+class QuakeHistoryIssue {
   @IsString()
   source?: string;
 
@@ -69,7 +69,7 @@ class QuakeHistoryHypocenter {
   magnitude?: number;
 }
 
-// 地震情報詳細
+// 地震履歴詳細
 class QuakeHistoryEarthquake {
   @IsNotEmpty()
   @IsString()
@@ -113,8 +113,8 @@ class QuakeHistoryComments {
   freeFormComment: string;
 }
 
-// 地震情報取得APIレスポンス
-export class fetchQuakeHistoryInfoResponseDto {
+// 地震履歴取得APIレスポンス
+export class fetchQuakeHistoryResponseDto {
   @IsNotEmpty()
   @IsString()
   id: string;
@@ -128,7 +128,7 @@ export class fetchQuakeHistoryInfoResponseDto {
   time: string;
 
   @IsNotEmpty()
-  issue: QuakeHistoryInfoIssue;
+  issue: QuakeHistoryIssue;
 
   @IsNotEmpty()
   earthquake: QuakeHistoryEarthquake;

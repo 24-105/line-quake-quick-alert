@@ -19,7 +19,7 @@ const client = new DynamoDBClient({
   credentials: credentials,
 });
 
-// 地震情報テーブルを作成する
+// 地震履歴テーブルを作成する
 const createTable = async () => {
   const params = {
     AttributeDefinitions: [
@@ -62,7 +62,7 @@ const enableTTL = async () => {
   }
 };
 
-// 地震情報テーブルを構築する
+// 地震履歴テーブルを構築する
 const setupQuakeHistoryTable = async () => {
   await createTable();
   await enableTTL();
