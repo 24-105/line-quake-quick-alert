@@ -3,7 +3,6 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   Min,
 } from '@nestjs/class-validator';
@@ -21,17 +20,20 @@ import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 
 // 地震履歴取得APIリクエスト
 export class fetchQuakeHistoryRequestDto {
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  limit?: number;
-
-  @IsOptional()
   @IsInt()
   @Min(0)
   @Type(() => Number)
-  offset?: number;
+  codes: number;
+
+  @IsInt()
+  @Min(1)
+  @Type(() => Number)
+  limit: number;
+
+  @IsInt()
+  @Min(0)
+  @Type(() => Number)
+  offset: number;
 }
 
 // 地震履歴概要
@@ -114,7 +116,7 @@ class QuakeHistoryComments {
 }
 
 // 地震履歴取得APIレスポンス
-export class fetchQuakeHistoryResponseDto {
+export class fetchQuakeHistoryResponse {
   @IsNotEmpty()
   @IsString()
   id: string;
@@ -137,4 +139,19 @@ export class fetchQuakeHistoryResponseDto {
 
   @IsNotEmpty()
   comments: QuakeHistoryComments;
+}
+
+// P2P地震履歴取得APIリクエストDTO
+export class FetchP2pQuakeHistoryRequestDto {
+  @IsNotEmpty()
+  @IsNumber()
+  codes: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  limit: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  offset?: number;
 }

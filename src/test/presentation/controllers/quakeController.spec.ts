@@ -14,7 +14,7 @@ import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 import { QuakeService } from 'src/application/services/quakeService';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
 import {
-  fetchQuakeHistoryResponseDto,
+  fetchQuakeHistoryResponse,
   fetchQuakeHistoryRequestDto,
 } from 'src/application/dto/quakeHistoryDto';
 
@@ -43,7 +43,7 @@ describe('QuakeController', () => {
   describe('fetchQuakeHistory', () => {
     it('should return earthquake history data', async () => {
       // モックデータ
-      const mockResponse: fetchQuakeHistoryResponseDto[] = [
+      const mockResponse: fetchQuakeHistoryResponse[] = [
         {
           id: '1',
           code: 551,
@@ -88,6 +88,7 @@ describe('QuakeController', () => {
 
       // リクエストDTO
       const request: fetchQuakeHistoryRequestDto = {
+        codes: 551,
         limit: 1,
         offset: 0,
       };
@@ -97,7 +98,7 @@ describe('QuakeController', () => {
 
       // 結果の検証
       expect(result).toEqual(mockResponse);
-      expect(quakeService.fetchQuakeHistory).toHaveBeenCalledWith(1, 0);
+      expect(quakeService.fetchQuakeHistory).toHaveBeenCalledWith(551, 1, 0);
     });
   });
 });

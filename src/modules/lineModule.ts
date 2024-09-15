@@ -4,6 +4,9 @@ import { LineAuthController } from 'src/presentation/controllers/lineAuthControl
 import { AccessTokenService } from 'src/application/services/accessTokenService';
 import { LineMessagingApiService } from 'src/infrastructure/api/line/lineMessagingApiService';
 
+/**
+ * LINEモジュール
+ */
 @Module({
   imports: [HttpModule],
   controllers: [LineAuthController],
