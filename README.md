@@ -172,6 +172,16 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Recommended commit message
+```bash
+- fix：バグ修正（Bug fixes）
+- hotfix：緊急性の高いバグ修正（Urgent bug fix）
+- feat：機能追加（Added functionality）
+- remove：機能削除（Function removed）
+- docs：ドキュメント整理（Organizing documents）
+- refactor：リファクタリング（Refactoring code）
+```
+
 ## Powered by NestJS
 
 <p align="center">
