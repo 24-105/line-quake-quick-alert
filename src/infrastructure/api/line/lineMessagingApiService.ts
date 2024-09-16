@@ -3,7 +3,12 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { URLSearchParams } from 'url';
 import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
-import { ILineMessagingApiService } from 'src/domain/interfaces/api/iineMessagingApiService';
+import { ILineMessagingApiService } from 'src/domain/interfaces/api/lineMessagingApiService';
+
+// ログメッセージ定数
+const REQUEST_CHANNEL_ACCESS_TOKEN_LOG =
+  'Requesting channel access token from the LINE Messaging API';
+const FETCH_ACCESS_TOKEN_FAILED_LOG = 'Failed to fetch channel access token';
 
 /**
  * LINE Messaging APIサービス
@@ -11,15 +16,11 @@ import { ILineMessagingApiService } from 'src/domain/interfaces/api/iineMessagin
 @Injectable()
 export class LineMessagingApiService implements ILineMessagingApiService {
   private readonly logger = new Logger(LineMessagingApiService.name);
-  private readonly REQUEST_ACCESS_TOKEN_LOG =
-    'Requesting channel access token from the LINE Messaging API';
-  private readonly FETCH_ACCESS_TOKEN_ERROR_LOG =
-    'Failed to fetch channel access token';
 
   constructor(private readonly httpService: HttpService) {}
 
   /**
-   * チャンネルアクセストークンを取得する
+   * LINE Messaging APIからチャンネルアクセストークンを取得する
    * https://developers.line.biz/ja/reference/messaging-api/#issue-channel-access-token-v2-1
    * @param jwt JWT
    * @returns チャンネルアクセストークン
@@ -27,6 +28,8 @@ export class LineMessagingApiService implements ILineMessagingApiService {
   async fetchChannelAccessToken(
     jwt: string,
   ): Promise<fetchChannelAccessTokenResponseDto> {
+    this.logger.log(REQUEST_CHANNEL_ACCESS_TOKEN_LOG);
+
     const url = 'https://api.line.me/oauth2/v2.1/token';
     const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
     const params = new URLSearchParams();
@@ -38,12 +41,11 @@ export class LineMessagingApiService implements ILineMessagingApiService {
     params.append('client_assertion', jwt);
 
     try {
-      this.logger.log(this.REQUEST_ACCESS_TOKEN_LOG);
       return await firstValueFrom(
         this.httpService.post(url, params.toString(), { headers }),
       ).then((response) => response.data);
     } catch (err) {
-      this.logger.error(this.FETCH_ACCESS_TOKEN_ERROR_LOG, err.stack);
+      this.logger.error(FETCH_ACCESS_TOKEN_FAILED_LOG, err.stack);
       throw err;
     }
   }

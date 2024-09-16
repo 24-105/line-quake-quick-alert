@@ -1,13 +1,13 @@
-import { IDynamodbRepository } from 'src/domain/interfaces/repositories/dynamodbRepository';
+import { IQuakeHistoryRepository } from 'src/domain/interfaces/repositories/quakeHitoryRepository';
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Logger } from '@nestjs/common';
 
 /**
- * AWS DynamoDBリポジトリ
+ * 地震情報リポジトリ
  */
-export class DynamodbRepository implements IDynamodbRepository {
-  private readonly logger = new Logger(DynamodbRepository.name);
+export class QuakeHistoryRepository implements IQuakeHistoryRepository {
+  private readonly logger = new Logger(QuakeHistoryRepository.name);
   private readonly dynamoDbClient: DynamoDBDocumentClient;
   private readonly tableName: string;
   private readonly CHECK_QUAKE_ID_ERROR_LOG =
