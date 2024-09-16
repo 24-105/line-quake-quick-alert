@@ -3,7 +3,7 @@ import { HttpModule } from '@nestjs/axios';
 import { QuakeService } from 'src/application/services/quakeService';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
-import { DynamodbRepository } from 'src/infrastructure/presistance/repositories/dynamodbRepository';
+import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
 
 /**
  * 地震モジュール
@@ -11,6 +11,6 @@ import { DynamodbRepository } from 'src/infrastructure/presistance/repositories/
 @Module({
   imports: [HttpModule],
   controllers: [QuakeController],
-  providers: [QuakeService, P2pQuakeApiService, DynamodbRepository],
+  providers: [QuakeService, P2pQuakeApiService, QuakeHistoryRepository],
 })
 export class QuakeModule {}

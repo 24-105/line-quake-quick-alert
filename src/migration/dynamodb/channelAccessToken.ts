@@ -30,11 +30,11 @@ const client = new DynamoDBClient({
 const createTable = async () => {
   const params = {
     AttributeDefinitions: [
-      { AttributeName: 'channelID', AttributeType: ScalarAttributeType.S },
+      { AttributeName: 'channelId', AttributeType: ScalarAttributeType.S },
       ,
     ],
-    TableName: 'AccessToken',
-    KeySchema: [{ AttributeName: 'channelID', KeyType: KeyType.HASH }],
+    TableName: process.env.CHANNEL_ACCESS_TOKEN_TABLE_NAME,
+    KeySchema: [{ AttributeName: 'channelId', KeyType: KeyType.HASH }],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
       WriteCapacityUnits: 1,
@@ -43,9 +43,9 @@ const createTable = async () => {
 
   try {
     const data = await client.send(new CreateTableCommand(params));
-    console.log('AccessToken Table is successfully created', data);
+    console.log('ChannelAccessToken Table is successfully created', data);
   } catch (err) {
-    console.error('AccessToken Table is failed to create', err);
+    console.error('ChannelAccessToken Table is failed to create', err);
     throw err;
   }
 };
@@ -53,7 +53,7 @@ const createTable = async () => {
 // TTLを有効化する
 const enableTTL = async () => {
   const params = {
-    TableName: 'AccessToken',
+    TableName: process.env.CHANNEL_ACCESS_TOKEN_TABLE_NAME,
     TimeToLiveSpecification: {
       AttributeName: 'TTL',
       Enabled: true,
@@ -62,17 +62,17 @@ const enableTTL = async () => {
 
   try {
     const data = await client.send(new UpdateTimeToLiveCommand(params));
-    console.log('AccessToken Table is successfully updated', data);
+    console.log('ChannelAccessToken Table is successfully updated', data);
   } catch (err) {
-    console.error('AccessToken Table is failed to update', err);
+    console.error('ChannelAccessToken Table is failed to update', err);
     throw err;
   }
 };
 
 // チャンネルアクセストークンテーブルを構築する
-const setupAccessTokenTable = async () => {
+const setupChannelAccessTokenTable = async () => {
   await createTable();
   await enableTTL();
 };
 
-setupAccessTokenTable();
+setupChannelAccessTokenTable();

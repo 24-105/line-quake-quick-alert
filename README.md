@@ -75,7 +75,7 @@
   - IDE： Visual Studio Code v1.93.x
   - テスト： Jest v29.x
   - コミットメッセージ検証：
-    - husly v9.x
+    - husky v9.x
     - @commitlint v19.x
   - コード整形： eslint v9.x
   - GitHub Copilot
@@ -143,10 +143,10 @@ $ docker-compose logs dynamodb-local
 $ docker-compose logs dynamodb-admin
 ```
 
-### Creat dynamodb tablel
+### Create dynamodb table
 
 ```bash
-$ NODE_ENV=local npx ts-node src/migration/dynamodb/acccessToken.ts
+$ NODE_ENV=local npx ts-node src/migration/dynamodb/channelAccessToken.ts
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/quakeHistory.ts
 ```
 
@@ -157,10 +157,10 @@ $ brew install awscli
 $ aws dynamodb list-tables --endpoint-url http://localhost:8000
 ```
 
-### Delete dynamodb tablel
+### Delete dynamodb table
 
 ```bash
-$ aws dynamodb delete-table --table-name AccessToken --endpoint-url http://localhost:8000
+$ aws dynamodb delete-table --table-name ChannelAccessToken --endpoint-url http://localhost:8000
 $ aws dynamodb delete-table --table-name QuakeHistory --endpoint-url http://localhost:8000
 ```
 

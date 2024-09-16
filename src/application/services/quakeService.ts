@@ -4,8 +4,8 @@ import { fetchP2pQuakeHistoryResponseDto } from '../dto/p2pQuakeHistoryDto';
 import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { convertToUnixTime, getJstTime } from 'src/domain/useCase/dateUseCase';
-import { DynamodbRepository } from 'src/infrastructure/presistance/repositories/dynamodbRepository';
 import { QUAKE_HISTORY_VALID_TIME } from 'src/config/constants';
+import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
 
 /**
  * 地震情報サービス
@@ -23,7 +23,7 @@ export class QuakeService implements IQuakeService {
 
   constructor(
     private readonly p2pQuakeApiService: P2pQuakeApiService,
-    private readonly dynamodbRepository: DynamodbRepository,
+    private readonly quakeHistoryRepository: QuakeHistoryRepository,
   ) {}
 
   /**
@@ -81,7 +81,7 @@ export class QuakeService implements IQuakeService {
 
       // 地震IDが地震履歴テーブルに存在するか確認
       this.logger.log(`Quake ID ${history.id} check start`);
-      const idExists = await this.dynamodbRepository.checkIfQuakeIDExists(
+      const idExists = await this.quakeHistoryRepository.checkIfQuakeIDExists(
         history.id,
       );
       if (idExists) {
