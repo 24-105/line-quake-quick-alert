@@ -3,6 +3,7 @@ import { QuakeModule } from './modules/quakeModule';
 import { LineModule } from './modules/lineModule';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AdminModule } from './modules/adminModule';
 
 /**
  * アプリケーションモジュール
@@ -14,7 +15,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       isGlobal: true, // グローバルに設定する
     }),
     ScheduleModule.forRoot(), // スケジュールモジュールを追加
-    QuakeModule,
+    AdminModule,
     QuakeModule,
     LineModule,
   ],
