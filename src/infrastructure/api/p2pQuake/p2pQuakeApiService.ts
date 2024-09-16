@@ -7,16 +7,17 @@ import {
 } from 'src/application/dto/quakeHistoryDto';
 import { IP2pQuakeApiService } from 'src/domain/interfaces/api/p2pQuakeApiService';
 
+// ログメッセージ定数
+const REQUEST_QUAKE_HISTORY_LOG =
+  'Fetching quake history from the P2P Quake API';
+const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history';
+
 /**
  * P2P地震情報APIサービス
  */
 @Injectable()
 export class P2pQuakeApiService implements IP2pQuakeApiService {
   private readonly logger = new Logger(P2pQuakeApiService.name);
-  private readonly REQUEST_QUAKE_HISTORY_LOG =
-    'Fetching quake history from the P2P Quake API';
-  private readonly FETCH_QUAKE_HISTORY_ERROR_LOG =
-    'Failed to fetch quake history';
 
   constructor(private readonly httpService: HttpService) {}
 
@@ -38,13 +39,13 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
 
     // P2P地震情報APIから地震情報を取得
     try {
-      this.logger.log(this.REQUEST_QUAKE_HISTORY_LOG);
+      this.logger.log(REQUEST_QUAKE_HISTORY_LOG);
       const response = await firstValueFrom(
         this.httpService.get(process.env.P2P_GET_QUAKE_HISTORY_URL, { params }),
       );
       return response.data;
     } catch (err) {
-      this.logger.error(`${this.FETCH_QUAKE_HISTORY_ERROR_LOG}`, err.stack);
+      this.logger.error(`${REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG}`, err.stack);
       throw err;
     }
   }

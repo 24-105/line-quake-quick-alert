@@ -7,19 +7,18 @@ import { convertToUnixTime, getJstTime } from 'src/domain/useCase/dateUseCase';
 import { QUAKE_HISTORY_VALID_TIME } from 'src/config/constants';
 import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
 
+// ログメッセージ定数
+const START_FETCH_QUAKE_HISTORY_BATCH_LOG = 'Start fetch quake history batch';
+const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history';
+const HISTORY_NOT_FOUND_LOG = 'No quake history found';
+const VERIFY_EVENT_TIME_SUCCESS_LOG = 'Event time is successfully verified';
+
 /**
  * 地震情報サービス
  */
 @Injectable()
 export class QuakeService implements IQuakeService {
   private readonly logger = new Logger(QuakeService.name);
-  private readonly START_FETCH_QUAKE_HISTORY_BATCH_LOG =
-    'Start fetch quake history batch';
-  private readonly REQUEST_FETCH_QUAKE_HISTORY_LOG =
-    'Requesting fetch quake history';
-  private readonly HISTORY_NOT_FOUND_ERROR_LOG = 'No quake history found';
-  private readonly VERIFY_EVENT_TIME_SUCCESS_LOG =
-    'Event time is successfully verified';
 
   constructor(
     private readonly p2pQuakeApiService: P2pQuakeApiService,
@@ -35,7 +34,7 @@ export class QuakeService implements IQuakeService {
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
   async fetchQuakeHistoryBatch(): Promise<fetchP2pQuakeHistoryResponseDto[]> {
-    this.logger.log(this.START_FETCH_QUAKE_HISTORY_BATCH_LOG);
+    this.logger.log(START_FETCH_QUAKE_HISTORY_BATCH_LOG);
     const codes = 551; // 固定引数
     const limit = 1; // 固定引数
     const offset = 0; // 固定引数
@@ -54,7 +53,7 @@ export class QuakeService implements IQuakeService {
     limit: number,
     offset: number,
   ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
-    this.logger.log(this.REQUEST_FETCH_QUAKE_HISTORY_LOG);
+    this.logger.log(REQUEST_FETCH_QUAKE_HISTORY_LOG);
 
     // P2P地震APIから地震情報を取得
     const quakeHistory = await this.p2pQuakeApiService.fetchP2pQuakeHistory(
@@ -65,7 +64,7 @@ export class QuakeService implements IQuakeService {
 
     // 地震情報が取得できなかった場合
     if (quakeHistory.length === 0) {
-      throw new Error(this.HISTORY_NOT_FOUND_ERROR_LOG);
+      throw new Error(HISTORY_NOT_FOUND_LOG);
     }
 
     // 現在時刻を取得
@@ -110,7 +109,7 @@ export class QuakeService implements IQuakeService {
       return true;
     }
 
-    this.logger.log(this.VERIFY_EVENT_TIME_SUCCESS_LOG);
+    this.logger.log(VERIFY_EVENT_TIME_SUCCESS_LOG);
     return false;
   }
 }

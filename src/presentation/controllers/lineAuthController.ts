@@ -7,7 +7,7 @@ const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG =
   'Requesting fetch channel access token';
 const FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS_LOG =
   'Channel access token successfully fetched';
-const FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
+const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
   'Failed to fetch channel access token';
 
 /**
@@ -33,7 +33,10 @@ export class LineAuthController {
       this.logger.log(FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS_LOG);
       return response;
     } catch (err) {
-      this.logger.error(FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG, err.stack);
+      this.logger.error(
+        REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG,
+        err.stack,
+      );
       throw err;
     }
   }

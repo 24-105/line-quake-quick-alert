@@ -3,6 +3,9 @@ import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Logger } from '@nestjs/common';
 
+// ログメッセージ定数
+const CHECK_QUAKE_ID_FAILED_LOG = 'Failed to fetch quake history quakeID';
+
 /**
  * 地震情報リポジトリ
  */
@@ -10,11 +13,9 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
   private readonly logger = new Logger(QuakeHistoryRepository.name);
   private readonly dynamoDbClient: DynamoDBDocumentClient;
   private readonly tableName: string;
-  private readonly CHECK_QUAKE_ID_ERROR_LOG =
-    'Failed to fetch quake history quakeID';
 
   constructor() {
-    this.dynamoDbClient = this.createDynamoDbClient();
+    this.dynamoDbClient = QuakeHistoryRepository.createDynamoDbClient();
     this.tableName = process.env.QUAKE_HISTORY_TABLE_NAME;
   }
 
@@ -22,7 +23,7 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
    * DynamoDBクライアントを作成する
    * @returns DynamoDBクライアント
    */
-  private createDynamoDbClient(): DynamoDBDocumentClient {
+  private static createDynamoDbClient(): DynamoDBDocumentClient {
     const client = new DynamoDBClient({
       region: process.env.AWS_REGION,
       endpoint: process.env.DYNAMODB_ENDPOINT,
@@ -49,10 +50,7 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
       this.logger.log(`Quake ID ${quakeID} does not exist in the table`);
       return false;
     } catch (err) {
-      this.logger.error(
-        `${this.CHECK_QUAKE_ID_ERROR_LOG}: ${quakeID}`,
-        err.stack,
-      );
+      this.logger.error(`${CHECK_QUAKE_ID_FAILED_LOG}: ${quakeID}`, err.stack);
       throw err;
     }
   }
