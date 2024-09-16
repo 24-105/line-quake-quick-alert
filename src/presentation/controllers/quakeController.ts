@@ -10,8 +10,13 @@ import {
   fetchQuakeHistoryRequestDto,
   fetchP2pQuakeHistoryResponseDto,
 } from 'src/application/dto/quakeHistoryDto';
-
 import { QuakeService } from 'src/application/services/quakeService';
+
+// ログメッセージ定数
+const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history';
+const REQUEST_FETCH_QUAKE_HISTORY_SUCCESS_LOG =
+  'Quake history successfully fetched';
+const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history';
 
 /**
  * 地震情報コントローラー
@@ -19,10 +24,6 @@ import { QuakeService } from 'src/application/services/quakeService';
 @Controller('api/v1/quake')
 export class QuakeController {
   private readonly logger = new Logger(QuakeController.name);
-  private readonly REQUEST_FETCH_QUAKE_HISTORY_LOG =
-    'Requesting fetch quake history';
-  private readonly REQUEST_SUCCESS_LOG = 'Quake history successfully fetched';
-  private readonly REQUEST_ERROR_LOG = 'Failed to fetch quake history';
 
   constructor(private readonly quakeService: QuakeService) {}
 
@@ -36,7 +37,7 @@ export class QuakeController {
   async fetchQuakeHistory(
     @Query() request: fetchQuakeHistoryRequestDto,
   ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
-    this.logger.log(this.REQUEST_FETCH_QUAKE_HISTORY_LOG);
+    this.logger.log(REQUEST_FETCH_QUAKE_HISTORY_LOG);
 
     const { codes, limit, offset } = request;
 
@@ -49,10 +50,10 @@ export class QuakeController {
         limit,
         offset,
       );
-      this.logger.log(this.REQUEST_SUCCESS_LOG);
+      this.logger.log(REQUEST_FETCH_QUAKE_HISTORY_SUCCESS_LOG);
       return response;
     } catch (err) {
-      this.logger.error(this.REQUEST_ERROR_LOG, err.stack);
+      this.logger.error(REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG, err.stack);
       throw err;
     }
   }
