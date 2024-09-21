@@ -7,13 +7,13 @@ import {
 } from 'src/application/dto/quakeHistoryDto';
 import { IP2pQuakeApiService } from 'src/domain/interfaces/api/p2pQuakeApiService';
 
-// ログメッセージ定数
+// Log message constants
 const REQUEST_QUAKE_HISTORY_LOG =
-  'Fetching quake history from the P2P Quake API';
-const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history';
+  'Fetching quake history from the P2P Quake API.';
+const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history.';
 
 /**
- * P2P地震情報APIサービス
+ * P2P地震情報 API Service
  */
 @Injectable()
 export class P2pQuakeApiService implements IP2pQuakeApiService {
@@ -22,22 +22,22 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
   constructor(private readonly httpService: HttpService) {}
 
   /**
-   * 地震情報をP2P地震情報APIから取得する
+   * Fetch quake history from P2P 地震情報 API.
    * https://www.p2pquake.net/develop/json_api_v2/#/P2P%E5%9C%B0%E9%9C%87%E6%83%85%E5%A0%B1%20API/get_history
-   * @param codes 地震情報コード
-   * @param limit 返却件数
-   * @param offset 読み飛ばす件数
-   * @returns 地震情報DTO
+   * @param codes quake history code
+   * @param limit Number of returned items
+   * @param offset Number of items to skip
+   * @returns P2P地震情報 API quake history response Dto
    */
   async fetchP2pQuakeHistory(
     codes: number,
     limit: number,
     offset: number,
   ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
-    // リクエストパラメータを作成
+    // create request parameters.
     const params = this.createParams(codes, limit, offset);
 
-    // P2P地震情報APIから地震情報を取得
+    // Fetch quake history from P2P地震情報 API.
     try {
       this.logger.log(REQUEST_QUAKE_HISTORY_LOG);
       const response = await firstValueFrom(
@@ -51,11 +51,11 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
   }
 
   /**
-   * HTTPリクエストのパラメータを作成する
-   * @param code 地震情報コード
-   * @param limit 返却件数
-   * @param offset 読み飛ばす件数
-   * @returns P2P地震情報取得APIリクエストDTO1
+   * Create HTTP request parameters.
+   * @param codes quake history code
+   * @param limit Number of returned items
+   * @param offset Number of items to skip
+   * @returns P2P地震情報 API quake history request Dto
    */
   private createParams(
     codes: number,

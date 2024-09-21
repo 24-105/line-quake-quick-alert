@@ -2,21 +2,20 @@ import { Controller, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 
 /**
- * LINE Webhookコントローラー
+ * LINE Webhook Controller
  */
 @Controller('webhook')
 export class LineWebhookController {
   /**
-   * Webhookの処理
-   * @param req
-   * @param res
+   * Handling webhooks.
+   * @param req request
+   * @param res response
    */
   @Post()
   handleWebhook(@Req() req: Request, @Res() res: Response): void {
-    // リクエストの処理
     console.log(req.body);
 
-    // ステータスコード200を返す
+    // Returns status code 200
     res.status(200).send('OK');
   }
 }

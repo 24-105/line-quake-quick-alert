@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-// LINEチャンネルアクセストークンレスポンスDTO
+// LINE channel access token response DTO
 export class fetchChannelAccessTokenResponseDto {
   @IsNotEmpty()
   @IsString()
