@@ -64,7 +64,7 @@
 ![Infrastructure](https://img.shields.io/badge/インフラ-AWS-orange)
 ![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%20Code%20v1.93.x-blue)
 ![Test](https://img.shields.io/badge/テスト-Jest%20v29.x-brightgreen)
-![GitHub Copilot](https://img.shields.io/badge/AGitHub%20Copilot-Enabled-blue)
+![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-Enabled-blue)
 
 ## インフラ構成
 
