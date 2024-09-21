@@ -56,31 +56,19 @@
 - LINEアカウントと連携して、特定の地域の地震情報を配信
 - ユーザーの希望する地域（都道府県）ごとのアラートを設定
 
-## 技術スタック
+## List of technologies used
+![Frontend](https://img.shields.io/badge/Frontend-LINE%20Messaging%20API-blue)
+![Backend](https://img.shields.io/badge/Backend-Node.js%20v20.x-brightgreen)
+![Language](https://img.shields.io/badge/Language-TypeScript-blue)
+![Framework](https://img.shields.io/badge/Framework-NestJS%20v10.x-red)
+![OS](https://img.shields.io/badge/OS-macOS%20v14.x-lightgrey)
+![External API](https://img.shields.io/badge/ExternalAPI-P2P地震情報%20%7C%20LINE%20Messaging%20API-yellow)
+![Infrastructure](https://img.shields.io/badge/Infra-AWS-orange)
+![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%20Code%20v1.93.x-blue)
+![Test](https://img.shields.io/badge/Test-Jest%20v29.x-brightgreen)
+![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-Enabled-blue)
 
-- フロントエンド: LINE Messaging API
-- バックエンド:
-  - 言語： TypeScript
-  - 実行環境： Node.js v20.x
-  - フレームワーク： NestJS v10.x
-  - OS： macOS v14.x
-  - 外部API：
-    - P2P地震情報
-    - LINE Messaging API
-- インフラ：
-  - AWS：
-    - EC2
-    - DynamoDB
-- 開発
-  - IDE： Visual Studio Code v1.93.x
-  - テスト： Jest v29.x
-  - コミットメッセージ検証：
-    - husky v9.x
-    - @commitlint v19.x
-  - コード整形： eslint v9.x
-  - GitHub Copilot
-
-## インフラ構成
+## Infrastructure configuration
 
 ![alt text](public/image/line-quake-quick-alert-infra.jpg)
 
