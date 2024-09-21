@@ -1,11 +1,19 @@
 import { IQuakeHistoryRepository } from 'src/domain/interfaces/repositories/quakeHitoryRepository';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+} from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Logger } from '@nestjs/common';
-import { QUAKE_HISTORY_TABLE_NAME } from 'src/config/constants';
+import {
+  QUAKE_HISTORY_TABLE_NAME,
+  QUAKE_ID_VALID_TIME,
+} from 'src/config/constants';
 
 // Log message constants
 const CHECK_QUAKE_ID_FAILED_LOG = 'Failed to fetch quake history quakeID.';
+const PUT_QUAKE_ID_FAILED_LOG = 'Failed to put quakeID.';
 
 /**
  * Quake history repository
@@ -33,11 +41,11 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
   }
 
   /**
-   * Check if the quake ID exists in the table.
+   * Check if quake ID exists in the table.
    * @param quakeID quake ID
    * @returns true: quake ID exists, false: quake ID does not exist
    */
-  async checkIfQuakeIDExists(quakeID: string): Promise<boolean> {
+  async isQuakeIdExists(quakeID: string): Promise<boolean> {
     const params = {
       TableName: this.tableName,
       Key: { quakeID: quakeID },
@@ -45,13 +53,31 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
     try {
       const result = await this.dynamoDbClient.send(new GetCommand(params));
       if (result.Item) {
-        this.logger.log(`Quake ID ${quakeID} exists in the table.`);
         return true;
       }
-      this.logger.log(`Quake ID ${quakeID} does not exist in the table.`);
       return false;
     } catch (err) {
       this.logger.error(`${CHECK_QUAKE_ID_FAILED_LOG}: ${quakeID}`, err.stack);
+      throw err;
+    }
+  }
+
+  /**
+   * Put quake ID in the table.
+   * @param quakeID quake ID
+   */
+  async putQuakeId(quakeID: string): Promise<void> {
+    const params = {
+      TableName: this.tableName,
+      Item: {
+        quakeID: quakeID,
+        TTL: QUAKE_ID_VALID_TIME,
+      },
+    };
+    try {
+      await this.dynamoDbClient.send(new PutCommand(params));
+    } catch (err) {
+      this.logger.error(PUT_QUAKE_ID_FAILED_LOG, err.stack);
       throw err;
     }
   }

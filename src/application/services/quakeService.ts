@@ -1,16 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
-import { fetchP2pQuakeHistoryResponseDto } from '../dto/p2pQuakeHistoryDto';
 import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 import { convertToUnixTime, getJstTime } from 'src/domain/useCase/date';
-import { QUAKE_HISTORY_VALID_TIME } from 'src/config/constants';
 import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
-import { verifyEventTime } from 'src/domain/useCase/quakeEventTime';
+import { isEventTimeValid } from 'src/domain/useCase/quakeEventTime';
+import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 
 // Log message constants
 const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history.';
 const HISTORY_NOT_FOUND_LOG = 'No quake history found.';
-const VERIFY_EVENT_TIME_SUCCESS_LOG = 'Event time is successfully verified.';
+const PUT_QUAKE_ID_FAILED_LOG = 'Failed to put quakeID.';
 
 /**
  * Quake service
@@ -35,7 +34,7 @@ export class QuakeService implements IQuakeService {
     codes: number,
     limit: number,
     offset: number,
-  ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
+  ): Promise<void> {
     this.logger.log(REQUEST_FETCH_QUAKE_HISTORY_LOG);
 
     // Fetch quake history from P2P 地震情報 API.
@@ -56,25 +55,31 @@ export class QuakeService implements IQuakeService {
 
     for (const history of quakeHistory) {
       // Verify quake event time.
-      this.logger.log(`Event time is ${history.earthquake.time} verify start.`);
-      if (await verifyEventTime(unixTimeNow, history.earthquake.time)) {
-        this.logger.log(
-          `Event time is over ${QUAKE_HISTORY_VALID_TIME} seconds ago.`,
-        );
+      if (await isEventTimeValid(unixTimeNow, history.earthquake.time)) {
         continue;
       }
-      this.logger.log(VERIFY_EVENT_TIME_SUCCESS_LOG);
+
+      // Verify quake scale.
+      if (history.earthquake.maxScale < PointsScale.SCALE40) {
+        continue;
+      }
 
       // Check if the quake ID exists in the table.
-      this.logger.log(`Quake ID ${history.id} check start.`);
-      const idExists = await this.quakeHistoryRepository.checkIfQuakeIDExists(
-        history.id,
-      );
-      if (idExists) {
+      if (await this.quakeHistoryRepository.isQuakeIdExists(history.id)) {
         continue;
       }
-    }
 
-    return quakeHistory;
+      console.log(
+        'ここでLINEユーザーの登録情報と比較する処理を入れ、配列に詰める',
+      );
+      console.log('配列からユーザーを取り出してLINEに通知する処理を入れる');
+
+      try {
+        await this.quakeHistoryRepository.putQuakeId(history.id);
+      } catch (err) {
+        this.logger.error(PUT_QUAKE_ID_FAILED_LOG, err.stack);
+        throw err;
+      }
+    }
   }
 }
