@@ -4,12 +4,12 @@ import { Logger } from '@nestjs/common';
 import { IChannelAccessTokenRepository } from 'src/domain/interfaces/repositories/channelAccessTokenRepository';
 import { CHANNEL_ACCESS_TOKEN_VALID_TIME } from 'src/config/constants';
 
-// ログメッセージ定数
+// Log message constants
 const PUT_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
-  'Failed to put channel access token';
+  'Failed to put channel access token.';
 
 /**
- * チャンネルアクセストークンリポジトリ
+ * Channel access token repository
  */
 export class ChannelAccessTokenRepository
   implements IChannelAccessTokenRepository
@@ -26,8 +26,8 @@ export class ChannelAccessTokenRepository
   }
 
   /**
-   * DynamoDBクライアントを作成する
-   * @returns DynamoDBクライアント
+   * Create an Amazon DynamoDB service client object.
+   * @returns DynamoDB service client object
    */
   private static createDynamoDbClient(): DynamoDBDocumentClient {
     const client = new DynamoDBClient({
@@ -38,7 +38,7 @@ export class ChannelAccessTokenRepository
   }
 
   /**
-   * チャンネルアクセストークンを保存する
+   * Channel access token.
    * @param channelAccessToken
    * @param keyId
    */

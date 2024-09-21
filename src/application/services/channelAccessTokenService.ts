@@ -4,16 +4,16 @@ import { fetchChannelAccessTokenResponseDto } from '../dto/channelAccessTokenDto
 import { LineMessagingApiService } from 'src/infrastructure/api/line/lineMessagingApiService';
 import { IChannelAccessTokenService } from 'src/domain/interfaces/services/channelAccessTokenService';
 
-// ログメッセージ定数
+// Log message constants
 const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG =
-  'Requesting fetch channel access token';
+  'Requesting fetch channel access token.';
 const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
-  'Failed to fetch channel access token';
-const GENERATE_JWT_FAILED_LOG = 'Failed to generate JWT';
-const GENERATE_JWT_LOG = 'Trying to generate JWT';
+  'Failed to fetch channel access token.';
+const GENERATE_JWT_FAILED_LOG = 'Failed to generate JWT.';
+const GENERATE_JWT_LOG = 'Trying to generate JWT.';
 
 /**
- * チャンネルアクセストークンサービス
+ * Channel access token service
  */
 @Injectable()
 export class ChannelAccessTokenService implements IChannelAccessTokenService {
@@ -24,8 +24,8 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
   ) {}
 
   /**
-   * チャンネルアクセストークンを取得する
-   * @returns チャンネルアクセストークン
+   * Fetch channel access token.
+   * @returns channel access token
    */
   async fetchChannelAccessToken(): Promise<fetchChannelAccessTokenResponseDto> {
     this.logger.log(REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG);
@@ -42,7 +42,7 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
   }
 
   /**
-   * JWTを生成する
+   * Generate JWT.
    * @returns JWT
    */
   private async generateJwt(): Promise<string> {
@@ -78,9 +78,9 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
   }
 
   /**
-   * JWTを使用してチャンネルアクセストークンを取得する
+   * Fetch channel access token using JWT.
    * @param jwt JWT
-   * @returns チャンネルアクセストークン
+   * @returns channel access token
    */
   private async fetchChannelAccessTokenWithJwt(
     jwt: string,

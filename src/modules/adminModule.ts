@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { HealthCheckController } from 'src/presentation/controllers/healthCheckController';
 
 /**
- * 管理者モジュール
+ * Admin module
  */
 @Module({
   controllers: [HealthCheckController],

@@ -7,14 +7,14 @@ import { convertToUnixTime, getJstTime } from 'src/domain/useCase/dateUseCase';
 import { QUAKE_HISTORY_VALID_TIME } from 'src/config/constants';
 import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
 
-// ログメッセージ定数
-const START_FETCH_QUAKE_HISTORY_BATCH_LOG = 'Start fetch quake history batch';
-const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history';
-const HISTORY_NOT_FOUND_LOG = 'No quake history found';
-const VERIFY_EVENT_TIME_SUCCESS_LOG = 'Event time is successfully verified';
+// Log message constants
+const START_FETCH_QUAKE_HISTORY_BATCH_LOG = 'Start fetch quake history batch.';
+const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history.';
+const HISTORY_NOT_FOUND_LOG = 'No quake history found.';
+const VERIFY_EVENT_TIME_SUCCESS_LOG = 'Event time is successfully verified.';
 
 /**
- * 地震情報サービス
+ * Quake service
  */
 @Injectable()
 export class QuakeService implements IQuakeService {
@@ -26,27 +26,27 @@ export class QuakeService implements IQuakeService {
   ) {}
 
   /**
-   * 地震情報を取得するバッチ
-   * @param codes 地震情報コード
-   * @param limit 返却件数
-   * @param offset 読み飛ばす件数
-   * @returns 地震情報DTO
+   * Batch to fetch quake history.
+   * @param codes quake history code
+   * @param limit Number of returned items
+   * @param offset Number of items to skip
+   * @returns P2P地震情報 API quake history response Dto
    */
   @Cron(CronExpression.EVERY_10_SECONDS)
   async fetchQuakeHistoryBatch(): Promise<fetchP2pQuakeHistoryResponseDto[]> {
     this.logger.log(START_FETCH_QUAKE_HISTORY_BATCH_LOG);
-    const codes = 551; // 固定引数
-    const limit = 1; // 固定引数
-    const offset = 0; // 固定引数
+    const codes = 551; // fixed argument
+    const limit = 1; // fixed argument
+    const offset = 0; // fixed argument
     return this.fetchQuakeHistory(codes, limit, offset);
   }
 
   /**
-   * 地震情報を取得する
-   * @param codes 地震情報コード
-   * @param limit 返却件数
-   * @param offset 読み飛ばす件数
-   * @returns 地震情報DTO
+   * Fetch quake history.
+   * @param codes quake history code
+   * @param limit Number of returned items
+   * @param offset Number of items to skip
+   * @returns P2P地震情報 API quake history response Dto
    */
   async fetchQuakeHistory(
     codes: number,
@@ -55,31 +55,31 @@ export class QuakeService implements IQuakeService {
   ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
     this.logger.log(REQUEST_FETCH_QUAKE_HISTORY_LOG);
 
-    // P2P地震APIから地震情報を取得
+    // Fetch quake history from P2P 地震情報 API.
     const quakeHistory = await this.p2pQuakeApiService.fetchP2pQuakeHistory(
       codes,
       limit,
       offset,
     );
 
-    // 地震情報が取得できなかった場合
+    // If quake information could not be fetched.
     if (quakeHistory.length === 0) {
       throw new Error(HISTORY_NOT_FOUND_LOG);
     }
 
-    // 現在時刻を取得
+    // Get current time and convert it to UnixTime.
     const jstTimeNow = getJstTime();
     const unixTimeNow = convertToUnixTime(jstTimeNow);
 
     for (const history of quakeHistory) {
-      // 地震の発生時間を検証
-      this.logger.log(`Event time is ${history.earthquake.time} verify start`);
+      // Verify quake event time.
+      this.logger.log(`Event time is ${history.earthquake.time} verify start.`);
       if (await this.verifyEventTime(unixTimeNow, history.earthquake.time)) {
         continue;
       }
 
-      // 地震IDが地震履歴テーブルに存在するか確認
-      this.logger.log(`Quake ID ${history.id} check start`);
+      // Check if the quake ID exists in the table.
+      this.logger.log(`Quake ID ${history.id} check start.`);
       const idExists = await this.quakeHistoryRepository.checkIfQuakeIDExists(
         history.id,
       );
@@ -92,10 +92,10 @@ export class QuakeService implements IQuakeService {
   }
 
   /**
-   * 地震の発生時間が現在時刻から閾値以上かどうかを検証
-   * @param unixTimeNow 現在時刻のUnixTime
-   * @param eventTime 地震の発生時間
-   * @returns true: 閾値以上, false: 閾値以内
+   * Check if the quake  event time meets the threshold.
+   * @param unixTimeNow current time in UnixTime
+   * @param eventTime quake event time
+   * @returns true: event time is over the threshold, false: event time is within the threshold
    */
   private async verifyEventTime(
     unixTimeNow: number,
@@ -104,7 +104,7 @@ export class QuakeService implements IQuakeService {
     const unixEventTime = convertToUnixTime(eventTime);
     if (unixTimeNow - unixEventTime >= QUAKE_HISTORY_VALID_TIME) {
       this.logger.log(
-        `Event time is over ${QUAKE_HISTORY_VALID_TIME} seconds ago`,
+        `Event time is over ${QUAKE_HISTORY_VALID_TIME} seconds ago.`,
       );
       return true;
     }
