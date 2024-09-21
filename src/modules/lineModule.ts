@@ -8,7 +8,7 @@ import { ChannelAccessTokenBatchService } from 'src/application/services/channel
 import { ChannelAccessTokenRepository } from 'src/infrastructure/persistence/repositories/channelAccessTokenRepository';
 
 /**
- * LINEモジュール
+ * LINE module
  */
 @Module({
   imports: [HttpModule],
