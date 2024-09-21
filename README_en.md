@@ -1,4 +1,4 @@
-[日本語はこちら](https://github.com/24-105/line-quake-alert/blob/main/README.md)
+[日本語はこちら](https://github.com/24-105/line-quake-alert/blob/develop/README.md)
 
 # Precautions
 
