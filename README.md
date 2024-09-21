@@ -1,4 +1,9 @@
-[Click here for English version!](https://github.com/24-105/line-quake-alert/blob/develop/README_en.md)
+<h4 align="center">
+    <p>
+        <b>日本語</b> |
+        <a href="README_en.md">English</a>
+    </p>
+</h4>
 
 ---
 

@@ -1,4 +1,9 @@
-[日本語はこちら](https://github.com/24-105/line-quake-alert/blob/develop/README.md)
+<h4 align="center">
+    <p>
+        <b>English</b> |
+        <a href="README.md">日本語</a>
+    </p>
+</h4>
 
 # Precautions
 
