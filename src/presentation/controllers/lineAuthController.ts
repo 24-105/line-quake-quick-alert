@@ -1,5 +1,4 @@
 import { Controller, Get, Logger } from '@nestjs/common';
-import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 import { ChannelAccessTokenService } from 'src/application/services/channelAccessTokenService';
 
 // Log message constants
@@ -24,14 +23,12 @@ export class LineAuthController {
    * @returns channel access token
    */
   @Get('channelAccessToken')
-  async fetchChannelAccessToken(): Promise<fetchChannelAccessTokenResponseDto> {
+  async fetchChannelAccessToken(): Promise<void> {
     this.logger.log(REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG);
 
     try {
-      const response =
-        await this.channelAccessTokenService.fetchChannelAccessToken();
+      await this.channelAccessTokenService.fetchChannelAccessToken();
       this.logger.log(FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS_LOG);
-      return response;
     } catch (err) {
       this.logger.error(
         REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG,
