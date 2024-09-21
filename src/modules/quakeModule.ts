@@ -6,7 +6,7 @@ import { QuakeController } from 'src/presentation/controllers/quakeController';
 import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
 
 /**
- * 地震モジュール
+ * Quake module
  */
 @Module({
   imports: [HttpModule],

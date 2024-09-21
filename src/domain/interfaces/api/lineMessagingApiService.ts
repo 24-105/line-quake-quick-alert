@@ -1,7 +1,7 @@
 import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 
 /**
- * LINE Messaging APIサービスインターフェース
+ * LINE Messaging API service interface
  */
 export interface ILineMessagingApiService {
   fetchChannelAccessToken(

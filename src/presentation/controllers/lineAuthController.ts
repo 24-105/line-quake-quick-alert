@@ -2,16 +2,16 @@ import { Controller, Get, Logger } from '@nestjs/common';
 import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 import { ChannelAccessTokenService } from 'src/application/services/channelAccessTokenService';
 
-// ログメッセージ定数
+// Log message constants
 const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG =
-  'Requesting fetch channel access token';
+  'Requesting fetch channel access token.';
 const FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS_LOG =
-  'Channel access token successfully fetched';
+  'Channel access token successfully fetched.';
 const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
-  'Failed to fetch channel access token';
+  'Failed to fetch channel access token.';
 
 /**
- * LINE認証コントローラー
+ * LINE authentication controller
  */
 @Controller('api/v1/line/auth')
 export class LineAuthController {
@@ -20,8 +20,8 @@ export class LineAuthController {
   constructor(readonly channelAccessTokenService: ChannelAccessTokenService) {}
 
   /**
-   * チャンネルアクセストークンを取得する
-   * @returns チャンネルアクセストーク
+   * Fetch channel access token.
+   * @returns channel access token
    */
   @Get('channelAccessToken')
   async fetchChannelAccessToken(): Promise<fetchChannelAccessTokenResponseDto> {
