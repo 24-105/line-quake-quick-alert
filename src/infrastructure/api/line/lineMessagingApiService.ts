@@ -5,13 +5,13 @@ import { URLSearchParams } from 'url';
 import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 import { ILineMessagingApiService } from 'src/domain/interfaces/api/lineMessagingApiService';
 
-// ログメッセージ定数
+// Log message constants
 const REQUEST_CHANNEL_ACCESS_TOKEN_LOG =
-  'Requesting channel access token from the LINE Messaging API';
-const FETCH_ACCESS_TOKEN_FAILED_LOG = 'Failed to fetch channel access token';
+  'Requesting channel access token from the LINE Messaging API.';
+const FETCH_ACCESS_TOKEN_FAILED_LOG = 'Failed to fetch channel access token.';
 
 /**
- * LINE Messaging APIサービス
+ * LINE Messaging API service
  */
 @Injectable()
 export class LineMessagingApiService implements ILineMessagingApiService {
@@ -20,10 +20,10 @@ export class LineMessagingApiService implements ILineMessagingApiService {
   constructor(private readonly httpService: HttpService) {}
 
   /**
-   * LINE Messaging APIからチャンネルアクセストークンを取得する
+   * Fetch channel access token from LINE Messaging API.
    * https://developers.line.biz/ja/reference/messaging-api/#issue-channel-access-token-v2-1
    * @param jwt JWT
-   * @returns チャンネルアクセストークン
+   * @returns channel access token
    */
   async fetchChannelAccessToken(
     jwt: string,

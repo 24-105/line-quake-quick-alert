@@ -7,33 +7,33 @@ import {
 } from '@aws-sdk/client-dynamodb';
 import * as dotenv from 'dotenv';
 
-// 実行環境を取得
+// Get execution environment.
 const env = process.env.NODE_ENV || 'local';
 
-// 環境変数ファイルをロード
+// Import environment variable file.
 dotenv.config({ path: `.env.${env}` });
 
-// 環境変数からクレデンシャルを取得
+// Get AWS credentials from environment variables.
 const credentials = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 };
 
-// DynamoDBクライアントを作成する
+// Create an Amazon DynamoDB service client object.
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
   endpoint: process.env.DYNAMODB_ENDPOINT,
   credentials: credentials,
 });
 
-// 地震履歴テーブルを作成する
+// Create quake history table.
 const createTable = async () => {
   const params = {
     AttributeDefinitions: [
       { AttributeName: 'quakeID', AttributeType: ScalarAttributeType.S },
       ,
     ],
-    TableName: 'QuakeHistory',
+    TableName: process.env.QUAKE_HISTORY_TABLE_NAME,
     KeySchema: [{ AttributeName: 'quakeID', KeyType: KeyType.HASH }],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
@@ -50,10 +50,10 @@ const createTable = async () => {
   }
 };
 
-// TTLを有効化する
+// Enable TTL.
 const enableTTL = async () => {
   const params = {
-    TableName: 'QuakeHistory',
+    TableName: process.env.QUAKE_HISTORY_TABLE_NAME,
     TimeToLiveSpecification: {
       AttributeName: 'TTL',
       Enabled: true,
@@ -69,7 +69,7 @@ const enableTTL = async () => {
   }
 };
 
-// 地震履歴テーブルを構築する
+// Build quake history table.
 const setupQuakeHistoryTable = async () => {
   await createTable();
   await enableTTL();

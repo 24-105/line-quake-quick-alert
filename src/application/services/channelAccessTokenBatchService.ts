@@ -6,21 +6,21 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { IChannelAccessTokenBatchService } from 'src/domain/interfaces/services/channelAccessTokenBatchService';
 import { ChannelAccessTokenRepository } from 'src/infrastructure/persistence/repositories/channelAccessTokenRepository';
 
-// ログメッセージ定数
+// Log message constants
 const START_UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_LOG =
-  'Start update channel access token batch';
-const GENERATE_JWT_LOG = 'Trying to generate JWT';
-const GENERATE_JWT_FAILED_LOG = 'Failed to generate JWT';
-const FETCH_CHANNEL_ACCESS_TOKEN_LOG = 'Trying to fetch channel access token';
+  'Start update channel access token batch.';
+const GENERATE_JWT_LOG = 'Trying to generate JWT.';
+const GENERATE_JWT_FAILED_LOG = 'Failed to generate JWT.';
+const FETCH_CHANNEL_ACCESS_TOKEN_LOG = 'Trying to fetch channel access token.';
 const FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
-  'Failed to fetch channel access token';
+  'Failed to fetch channel access token.';
 const UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_SUCCESS_LOG =
-  'Successfully updated channel access token';
+  'Successfully updated channel access token.';
 const UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_FAILED_LOG =
-  'Failed to update channel access token';
+  'Failed to update channel access token.';
 
 /**
- * チャンネルアクセストークンバッチサービス
+ * Channel access token batch service
  */
 @Injectable()
 export class ChannelAccessTokenBatchService
@@ -34,7 +34,7 @@ export class ChannelAccessTokenBatchService
   ) {}
 
   /**
-   * チャンネルアクセストークンを更新するバッチ
+   * Batch to update channel access token.
    */
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async updateChannelAccessTokenBatch(): Promise<void> {
@@ -60,7 +60,7 @@ export class ChannelAccessTokenBatchService
   }
 
   /**
-   * JWTを生成する
+   * Generate JWT.
    * @returns JWT
    */
   private async generateJwt(): Promise<string> {
@@ -96,9 +96,9 @@ export class ChannelAccessTokenBatchService
   }
 
   /**
-   * JWTを使用してチャンネルアクセストークンを取得する
+   * Fetch channel access token using JWT.
    * @param jwt JWT
-   * @returns チャンネルアクセストークン
+   * @returns channel access token
    */
   private async fetchChannelAccessTokenWithJwt(
     jwt: string,
