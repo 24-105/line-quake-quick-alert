@@ -2,7 +2,10 @@ import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Logger } from '@nestjs/common';
 import { IChannelAccessTokenRepository } from 'src/domain/interfaces/repositories/channelAccessTokenRepository';
-import { CHANNEL_ACCESS_TOKEN_VALID_TIME } from 'src/config/constants';
+import {
+  CHANNEL_ACCESS_TOKEN_TABLE_NAME,
+  CHANNEL_ACCESS_TOKEN_VALID_TIME,
+} from 'src/config/constants';
 
 // Log message constants
 const PUT_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
@@ -22,7 +25,7 @@ export class ChannelAccessTokenRepository
   constructor() {
     this.dynamoDbClient = ChannelAccessTokenRepository.createDynamoDbClient();
     this.channelId = process.env.LINE_QUALE_QUICK_ALERT_ISS;
-    this.tableName = process.env.CHANNEL_ACCESS_TOKEN_TABLE_NAME;
+    this.tableName = CHANNEL_ACCESS_TOKEN_TABLE_NAME;
   }
 
   /**

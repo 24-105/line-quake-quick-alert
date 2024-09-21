@@ -4,6 +4,7 @@ import { QuakeService } from 'src/application/services/quakeService';
 import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
 import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
+import { QuakeBatchService } from 'src/application/services/quakeBatchService';
 
 /**
  * Quake module
@@ -11,6 +12,11 @@ import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositor
 @Module({
   imports: [HttpModule],
   controllers: [QuakeController],
-  providers: [QuakeService, P2pQuakeApiService, QuakeHistoryRepository],
+  providers: [
+    QuakeService,
+    QuakeBatchService,
+    P2pQuakeApiService,
+    QuakeHistoryRepository,
+  ],
 })
 export class QuakeModule {}

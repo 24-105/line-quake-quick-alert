@@ -2,6 +2,7 @@ import { IQuakeHistoryRepository } from 'src/domain/interfaces/repositories/quak
 import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Logger } from '@nestjs/common';
+import { QUAKE_HISTORY_TABLE_NAME } from 'src/config/constants';
 
 // Log message constants
 const CHECK_QUAKE_ID_FAILED_LOG = 'Failed to fetch quake history quakeID.';
@@ -16,7 +17,7 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
 
   constructor() {
     this.dynamoDbClient = QuakeHistoryRepository.createDynamoDbClient();
-    this.tableName = process.env.QUAKE_HISTORY_TABLE_NAME;
+    this.tableName = QUAKE_HISTORY_TABLE_NAME;
   }
 
   /**
