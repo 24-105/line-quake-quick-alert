@@ -6,6 +6,7 @@ import {
   KeyType,
 } from '@aws-sdk/client-dynamodb';
 import * as dotenv from 'dotenv';
+import { QUAKE_HISTORY_TABLE_NAME } from 'src/config/constants';
 
 // Get execution environment.
 const env = process.env.NODE_ENV || 'local';
@@ -33,7 +34,7 @@ const createTable = async () => {
       { AttributeName: 'quakeID', AttributeType: ScalarAttributeType.S },
       ,
     ],
-    TableName: process.env.QUAKE_HISTORY_TABLE_NAME,
+    TableName: QUAKE_HISTORY_TABLE_NAME,
     KeySchema: [{ AttributeName: 'quakeID', KeyType: KeyType.HASH }],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
@@ -53,7 +54,7 @@ const createTable = async () => {
 // Enable TTL.
 const enableTTL = async () => {
   const params = {
-    TableName: process.env.QUAKE_HISTORY_TABLE_NAME,
+    TableName: QUAKE_HISTORY_TABLE_NAME,
     TimeToLiveSpecification: {
       AttributeName: 'TTL',
       Enabled: true,

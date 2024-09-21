@@ -6,6 +6,7 @@ import {
   fetchP2pQuakeHistoryResponseDto,
 } from 'src/application/dto/quakeHistoryDto';
 import { IP2pQuakeApiService } from 'src/domain/interfaces/api/p2pQuakeApiService';
+import { P2P_GET_QUAKE_HISTORY_URL } from 'src/config/constants';
 
 // Log message constants
 const REQUEST_QUAKE_HISTORY_LOG =
@@ -41,7 +42,7 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
     try {
       this.logger.log(REQUEST_QUAKE_HISTORY_LOG);
       const response = await firstValueFrom(
-        this.httpService.get(process.env.P2P_GET_QUAKE_HISTORY_URL, { params }),
+        this.httpService.get(P2P_GET_QUAKE_HISTORY_URL, { params }),
       );
       return response.data;
     } catch (err) {
