@@ -1,4 +1,4 @@
-[Click here for English version!](README.en.md)
+[Click here for English version!](https://github.com/24-105/line-quake-alert/README.en.md)
 
 ---
 
