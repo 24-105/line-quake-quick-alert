@@ -31,10 +31,10 @@ export class QuakeBatchService implements IQuakeBatchService {
   async fetchQuakeHistoryBatch(): Promise<void> {
     this.logger.log(START_FETCH_QUAKE_HISTORY_BATCH_LOG);
     const codes = P2P_GET_QUAKE_HISTORY_CODE; // fixed argument
-    const limit = 1; // fixed argument
+    const limit = 5; // fixed argument
     const offset = 0; // fixed argument
     try {
-      this.quakeService.fetchQuakeHistory(codes, limit, offset);
+      await this.quakeService.fetchQuakeHistory(codes, limit, offset);
       this.logger.log(FETCH_QUAKE_HISTORY_BATCH_SUCCESS_LOG);
     } catch (err) {
       this.logger.error(FETCH_QUAKE_HISTORY_BATCH_FAILED_LOG);

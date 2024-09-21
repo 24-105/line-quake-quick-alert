@@ -2,5 +2,6 @@
  * quake history repository interface
  */
 export interface IQuakeHistoryRepository {
-  checkIfQuakeIDExists(quakeId: string): Promise<boolean>;
+  isQuakeIdExists(quakeId: string): Promise<boolean>;
+  putQuakeId(quakeId: string): Promise<void>;
 }

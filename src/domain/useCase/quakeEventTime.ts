@@ -7,7 +7,7 @@ import { convertToUnixTime } from './date';
  * @param eventTime quake event time
  * @returns true: event time is over the threshold, false: event time is within the threshold
  */
-export const verifyEventTime = async (
+export const isEventTimeValid = async (
   unixTimeNow: number,
   eventTime: string,
 ): Promise<boolean> => {

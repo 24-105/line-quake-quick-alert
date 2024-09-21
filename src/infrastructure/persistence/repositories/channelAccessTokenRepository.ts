@@ -41,7 +41,7 @@ export class ChannelAccessTokenRepository
   }
 
   /**
-   * Channel access token.
+   * Put channel access token in the table.
    * @param channelAccessToken
    * @param keyId
    */
