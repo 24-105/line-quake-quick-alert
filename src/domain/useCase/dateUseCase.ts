@@ -2,8 +2,8 @@ import { format, toZonedTime } from 'date-fns-tz';
 import { parse } from 'date-fns';
 
 /**
- * 現在のJST時間を取得する
- * @returns JST時間(yyyy/MM/dd HH:mm:ss)
+ * Get the current time in JST time.
+ * @returns JST time(yyyy/MM/dd HH:mm:ss)
  */
 export const getJstTime = (): string => {
   const currentUtcTime = new Date();
@@ -14,8 +14,8 @@ export const getJstTime = (): string => {
 };
 
 /**
- * 文字列の時間をUnixTimeに変換する
- * @param dateString 文字列の時間(yyyy/MM/dd HH:mm:ss)
+ * Convert string time to UnixTime.
+ * @param dateString string time(yyyy/MM/dd HH:mm:ss)
  * @returns UnixTime
  */
 export const convertToUnixTime = (dateString: string): number => {

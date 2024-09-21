@@ -42,7 +42,7 @@ describe('QuakeController', () => {
 
   describe('fetchQuakeHistory', () => {
     it('should return earthquake history data', async () => {
-      // モックデータ
+      // Define mock data.
       const mockResponse: fetchP2pQuakeHistoryResponseDto[] = [
         {
           id: '1',
@@ -81,22 +81,22 @@ describe('QuakeController', () => {
         },
       ];
 
-      // QuakeServiceのfetchQuakeHistoryメソッドをモック化
+      // Mock QuakeService's fetchQuakeHistory method.
       jest
         .spyOn(quakeService, 'fetchQuakeHistory')
         .mockResolvedValue(mockResponse);
 
-      // リクエストDTO
+      // Define request data.
       const request: fetchQuakeHistoryRequestDto = {
         codes: 551,
         limit: 1,
         offset: 0,
       };
 
-      // コントローラの呼び出し
+      // Controller call.
       const result = await quakeController.fetchQuakeHistory(request);
 
-      // 結果の検証
+      // Validation of results.
       expect(result).toEqual(mockResponse);
       expect(quakeService.fetchQuakeHistory).toHaveBeenCalledWith(551, 1, 0);
     });

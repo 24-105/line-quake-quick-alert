@@ -12,14 +12,14 @@ import {
 } from 'src/application/dto/quakeHistoryDto';
 import { QuakeService } from 'src/application/services/quakeService';
 
-// ログメッセージ定数
-const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history';
+// Log message constants
+const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history.';
 const REQUEST_FETCH_QUAKE_HISTORY_SUCCESS_LOG =
-  'Quake history successfully fetched';
-const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history';
+  'Quake history successfully fetched.';
+const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history.';
 
 /**
- * 地震情報コントローラー
+ * Quake controller
  */
 @Controller('api/v1/quake')
 export class QuakeController {
@@ -28,9 +28,9 @@ export class QuakeController {
   constructor(private readonly quakeService: QuakeService) {}
 
   /**
-   * 地震情報を取得する
-   * @param request リクエストパラメーター
-   * @returns 地震情報DTO
+   * Fetch quake history.
+   * @param request request parameters
+   * @returns quake history DTO
    */
   @Get('history')
   @UsePipes(new ValidationPipe({ transform: true }))

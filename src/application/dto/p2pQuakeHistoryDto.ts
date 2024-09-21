@@ -18,7 +18,7 @@ import {
 } from 'src/domain/enum/quakeHistrory/issueEnum';
 import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
 
-// 地震情報取得リクエスト
+// Quake history request DTO
 export class fetchQuakeHistoryRequestDto {
   @IsNotEmpty()
   @IsInt()
@@ -38,7 +38,7 @@ export class fetchQuakeHistoryRequestDto {
   offset: number;
 }
 
-// 地震情報概要
+// Quake history issue
 class QuakeHistoryIssue {
   @IsString()
   source?: string;
@@ -55,7 +55,7 @@ class QuakeHistoryIssue {
   correct?: IssueCorrect;
 }
 
-// 震源地
+// Quake history hypocenter
 class QuakeHistoryHypocenter {
   @IsString()
   name?: string;
@@ -73,7 +73,7 @@ class QuakeHistoryHypocenter {
   magnitude?: number;
 }
 
-// 地震情報詳細
+// Quake history earthquake
 class QuakeHistoryEarthquake {
   @IsNotEmpty()
   @IsString()
@@ -91,7 +91,7 @@ class QuakeHistoryEarthquake {
   foreignTsunami?: EarthquakeForeignTsunami;
 }
 
-// 震度観測点の情報
+// Quake history points
 class QuakeHistoryPoints {
   @IsNotEmpty()
   @IsString()
@@ -110,14 +110,14 @@ class QuakeHistoryPoints {
   scale: PointsScale;
 }
 
-// 付加文
+// Quake history comments
 class QuakeHistoryComments {
   @IsNotEmpty()
   @IsString()
   freeFormComment: string;
 }
 
-// P2P地震情報レスポンスDTO
+// P2P地震情報 API quake history response Dto
 export class fetchP2pQuakeHistoryResponseDto {
   @IsNotEmpty()
   @IsString()
@@ -143,7 +143,7 @@ export class fetchP2pQuakeHistoryResponseDto {
   comments: QuakeHistoryComments;
 }
 
-// P2P地震情報リクエストDTO
+// P2P地震情報 API quake history request Dto
 export class FetchP2pQuakeHistoryRequestDto {
   @IsNotEmpty()
   @IsNumber()

@@ -6,10 +6,18 @@
 
 ---
 
+# Related issues
+
+<!--
+    Please let us know if there are any resolved issues.
+-->
+
+---
+
 # Check List
 
-- [ ] （コンパイルエラーがない　No compilation errors）
-- [ ] （Nest.jsの起動エラーがない　No Nest.js startup errors）
-- [ ] （テストにエラーがない　No errors in tests）
+- [ ] （No compilation errors）
+- [ ] （No Nest.js startup errors）
+- [ ] （No errors in tests）
 
 ---

@@ -1,7 +1,7 @@
 import { fetchP2pQuakeHistoryResponseDto } from 'src/application/dto/quakeHistoryDto';
 
 /**
- * 地震情報サービスインターフェース
+ * Quake service interface
  */
 export interface IQuakeService {
   fetchQuakeHistory(
