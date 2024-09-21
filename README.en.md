@@ -1,122 +1,120 @@
-[Click here for English version!](README.en.md)
+[日本語はこちら](README.md)
+
+# Precautions
+
+- This app uses information provided by the Japan Meteorological Agency based on its content usage terms. Source：Japan Meteorological Agency homepage（https://www.jma.go.jp/jma/kishou/info/coment.html）
+- Information is edited and processed in accordance with the Japan Meteorological Agency's content usage terms. Source：Japan Meteorological Agency homepage（Same as above）
+- This app uses information provided by P2P earthquake information. Source：P2P地震情報（https://www.p2pquake.net/develop/json_api_v2/#/）
+- We are not responsible for any damage caused by the use of this app. We also do not guarantee the accuracy of the information provided.
 
 ---
 
-# 注意書き
+# App Name: Quake Alert
 
-- 本アプリは、日本気象庁のコンテンツ利用規約に基づき、同庁から提供される情報を利用しています。出典：気象庁ホームページ（https://www.jma.go.jp/jma/kishou/info/coment.html）
-- 日本気象庁のコンテンツ利用規約に従い、情報の編集や加工を行っています。出典：気象庁ホームページ（同上）
-- 本アプリでは、P2P地震情報の提供される情報を利用しています。出典：P2P地震情報（https://www.p2pquake.net/develop/json_api_v2/#/）
-- 本アプリの利用に起因する損害について、当方は一切の責任を負いません。また、提供する情報の正確性も保証いたしません。
+## Site Overview
 
----
+### Site Theme
 
-# アプリ名：地震アラート
+"Quake Alert" is a real-time warning LINE official account designed to quickly notify users about earthquake information in Japan. When an earthquake occurs in a region registered by the user, they will receive timely information via LINE.
 
-## サイト概要
+### Reason for choosing the theme
 
-### サイトテーマ
+background of the matter: Japan is a country where earthquakes occur frequently, so receiving instant information is extremely important. Although there are existing disaster prevention systems, applications with notification and alert functions specific to individual users are still lacking.
 
-「地震アラート」は、日本国内の地震情報を迅速に通知するためのリアルタイム警告LINE公式アカウントです。LINEを通じてユーザーが登録した地域に地震が発生した場合、迅速に情報を受け取ることができます。
+**Strange things and challenges:**
 
-### テーマを選んだ理由
+- It is difficult to respond quickly after an earthquake occurs.
+- There is a lack of personalized earthquake information distribution.
+- I want to easily obtain earthquake information on my smartphone, but push notifications are complicated and difficult to manage.
+- To solve the above issues, we developed a simple and customizable earthquake alert system using LINE.
 
-背景: 日本は地震が頻発する国であり、即時性のある情報を受け取ることは非常に重要です。既存の防災システムはありますが、個々のユーザーに特化した通知やアラート機能を持つアプリケーションはまだ不十分です。
+## Target user
 
-**困りごとと課題:**
+- People who want to obtain earthquake information in real time in Japan.
+- People who live in a specific area and want to know earthquake information for that area as soon as possible.
+- Persons in charge of disaster prevention at home or at work are required to respond quickly in emergencies.
 
-- 地震発生後の迅速な対応が難しい。
-- 個人に合わせた地震情報の配信が不足している。
-- スマートフォンで手軽に地震情報を取得したいが、プッシュ通知が煩雑で管理しづらい。
-- 上記の課題を解決するために、LINEを利用したシンプルでカスタマイズ可能な地震アラートシステムを開発しました。
+## Main usage scenes
 
-## ターゲットユーザー
+- Immediately after an earthquake occurs, users will receive an immediate notification through LINE, allowing them to respond quickly.
+- Share the earthquake occurrence with your family and colleagues via LINE to prevent secondary disasters.
+- Check information about the area where the earthquake occurred and use it for evacuation and response.
 
-- 日本国内で地震情報をリアルタイムに取得したい人。
-- 特定の地域に住んでおり、その地域の地震情報をいち早く知りたい人。
-- 緊急時に迅速な対応が求められる家庭や職場の防災担当者。
+## Function list
 
-## 主な利用シーン
+- Real-time acquisition of earthquake information (using data provided by the Japan Meteorological Agency via P2P earthquake information).
+- Distribute earthquake information in specific areas by linking with your LINE account.
+- Set alerts for each region (prefecture) desired by the user.
 
-- 地震発生直後にユーザーがLINEを通じて即座に通知を受け取り、迅速な対応ができる。
-- 家族や同僚にLINEを通じて地震の発生を共有し、二次災害を防止する。
-- 地震が発生した地域に関する情報を確認し、避難や対応に役立てる。
+## List of technologies used
 
-## 機能一覧
-
-- 地震情報のリアルタイム取得（P2P地震情報を経由した日本気象庁提供のデータを使用）
-- LINEアカウントと連携して、特定の地域の地震情報を配信
-- ユーザーの希望する地域（都道府県）ごとのアラートを設定
-
-## 使用技術一覧
-
-![Frontend](https://img.shields.io/badge/フロントエンド-LINE%20Messaging%20API-blue)
-![Backend](https://img.shields.io/badge/バックエンド-Node.js%20v20.x-brightgreen)
-![Language](https://img.shields.io/badge/言語-TypeScript-blue)
-![Framework](https://img.shields.io/badge/フレームワーク-NestJS%20v10.x-red)
+![Frontend](https://img.shields.io/badge/Frontend-LINE%20Messaging%20API-blue)
+![Backend](https://img.shields.io/badge/Backend-Node.js%20v20.x-brightgreen)
+![Language](https://img.shields.io/badge/Language-TypeScript-blue)
+![Framework](https://img.shields.io/badge/Framework-NestJS%20v10.x-red)
 ![OS](https://img.shields.io/badge/OS-macOS%20v14.x-lightgrey)
-![External API](https://img.shields.io/badge/外部API-P2P地震情報%20%7C%20LINE%20Messaging%20API-yellow)
-![Infrastructure](https://img.shields.io/badge/インフラ-AWS-orange)
+![External API](https://img.shields.io/badge/ExternalAPI-P2P地震情報%20%7C%20LINE%20Messaging%20API-yellow)
+![Infrastructure](https://img.shields.io/badge/Infra-AWS-orange)
 ![IDE](https://img.shields.io/badge/IDE-Visual%20Studio%20Code%20v1.93.x-blue)
-![Test](https://img.shields.io/badge/テスト-Jest%20v29.x-brightgreen)
-![GitHub Copilot](https://img.shields.io/badge/AGitHub%20Copilot-Enabled-blue)
+![Test](https://img.shields.io/badge/Test-Jest%20v29.x-brightgreen)
+![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-Enabled-blue)
 
-## インフラ構成
+## Infrastructure configuration
 
 ![alt text](public/image/line-quake-quick-alert-infra.jpg)
 
-## プロジェクト構築手順
+## Project setup
 
-### ローカルPCへプロジェクトをクローンする
+### Project clone to local
 
 ```bash
 $ git clone https://github.com/24-105/line-quake-quick-alert.git
 ```
 
-### Node.jsのインストール
+### Install Node.js
 
 ```bash
-## homebrewを使用している場合
+## using homebrew
 $ brew install node@20
 
-## voltaを使用している場合
+## using volta
 $ volta install node@20
 ```
 
-### バージョンの確認
+### Check version
 
 ```bash
 $ node -v
 $ npm -v
 ```
 
-### パッケージのインストール
+### Install the package
 
 ```bash
 $ npm install
 ```
 
-### TypeScriptのコンパイル
+### Compile
 
 ```bash
 $ npx tsc
 ```
 
-## Dockerの構築手順
+## Docker setup
 
-### フォルダー作成
+### Make directory
 
 ```bash
 $ mkdir -p ./docker/dynamodb
 ```
 
-### Dockerコンテナーの作成と起動
+### Creating and starting multiple containers
 
 ```bash
 $ docker-compose up -d
 ```
 
-### Dockerコンテナーの状態・ログ確認
+### Check docker container
 
 ```bash
 $ docker-compose ps
@@ -124,75 +122,75 @@ $ docker-compose logs dynamodb-local
 $ docker-compose logs dynamodb-admin
 ```
 
-### AWS DynamoDBテーブルを作成する
+### Create dynamodb table
 
 ```bash
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/channelAccessToken.ts
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/quakeHistory.ts
 ```
 
-### AWS DynamoDBテーブルが作成されたか確認
+### Check if table was created
 
 ```bash
 $ brew install awscli
 $ aws dynamodb list-tables --endpoint-url http://localhost:8000
 ```
 
-### AWS DynamoDBテーブルを削除する
+### Delete dynamodb table
 
 ```bash
 $ aws dynamodb delete-table --table-name ChannelAccessToken --endpoint-url http://localhost:8000
 $ aws dynamodb delete-table --table-name QuakeHistory --endpoint-url http://localhost:8000
 ```
 
-### Dockerコンテナーの停止と削除
+### Stopping and removing containers
 
 ```bash
 $ docker-compose down
 ```
 
-## アプリケーション起動
+## Compile and run the project
 
 ```bash
-# ローカルモードでの起動
+# local mode
 $ npm run start:local
 
-# 開発モードでの起動
+# development mode
 $ npm run start:dev
 
-# 本番モードでの起動
+# production mode
 $ npm run start:prd
 
-# デバッグモードでの起動
+# watch mode
 $ npm run start:debug
 ```
 
-## テスト起動
+## Run tests
 
 ```bash
-# ユニットテスト
+# unit tests
 $ npm run test
 
-# e2eテスト
+# e2e tests
 $ npm run test:e2e
 
-# ユニットテスト後、テストカバレッジのレポートを生成
+# test coverage
 $ npm run test:cov
 ```
 
-## 推奨するコミットメッセージ
+## Recommended commit message
 
 ```bash
-- build: ビルドシステムまたは外部依存関係に影響する変更
-- ci: CI構成ファイルとスクリプトへの変更
-- docs: ドキュメントのみの変更
-- feat: 新機能
-- fix: バグ修正
-- perf: パフォーマンスの向上
-- refactor: リファクタリング
-- style: コードの意味に影響しない変更
-- test: 不足しているテストの追加または既存のテストの修正
-- chore: その他
+- build: Changes that affect the build system or external dependencies.
+- ci: Changes to CI configuration files and scripts.
+- docs: Document only changes.
+- feat: New features.
+- fix: Bug fixes.
+- perf: Improved performance.
+- refactor: refactoring.
+- style: Changes that do not affect the meaning of the code.
+- test: Add missing tests or modify existing tests
+- chore: others
 ```
 
 ## Powered by NestJS
