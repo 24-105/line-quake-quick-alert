@@ -1,12 +1,11 @@
 import {
   CreateTableCommand,
   DynamoDBClient,
-  UpdateTimeToLiveCommand,
   ScalarAttributeType,
   KeyType,
 } from '@aws-sdk/client-dynamodb';
 import * as dotenv from 'dotenv';
-import { QUAKE_HISTORY_TABLE_NAME } from '../../config/constants';
+import { USERS_TABLE_NAME } from '../../config/constants';
 
 // Get execution environment.
 const env = process.env.NODE_ENV;
@@ -27,15 +26,15 @@ const client = new DynamoDBClient({
   credentials: credentials,
 });
 
-// Create quake history table.
+// Create users table.
 const createTable = async () => {
   const params = {
     AttributeDefinitions: [
-      { AttributeName: 'quakeId', AttributeType: ScalarAttributeType.S },
+      { AttributeName: 'userId', AttributeType: ScalarAttributeType.S },
       ,
     ],
-    TableName: QUAKE_HISTORY_TABLE_NAME,
-    KeySchema: [{ AttributeName: 'quakeId', KeyType: KeyType.HASH }],
+    TableName: USERS_TABLE_NAME,
+    KeySchema: [{ AttributeName: 'userId', KeyType: KeyType.HASH }],
     ProvisionedThroughput: {
       ReadCapacityUnits: 1,
       WriteCapacityUnits: 1,
@@ -44,36 +43,16 @@ const createTable = async () => {
 
   try {
     const data = await client.send(new CreateTableCommand(params));
-    console.log('QuakeHistory Table is successfully created', data);
+    console.log('Users Table is successfully created', data);
   } catch (err) {
-    console.error('QuakeHistory Table is failed to create', err);
+    console.error('Users Table is failed to create', err);
     throw err;
   }
 };
 
-// Enable TTL.
-const enableTTL = async () => {
-  const params = {
-    TableName: QUAKE_HISTORY_TABLE_NAME,
-    TimeToLiveSpecification: {
-      AttributeName: 'TTL',
-      Enabled: true,
-    },
-  };
-
-  try {
-    const data = await client.send(new UpdateTimeToLiveCommand(params));
-    console.log('QuakeHistory Table is successfully updated', data);
-  } catch (err) {
-    console.error('QuakeHistory Table is failed to update', err);
-    throw err;
-  }
-};
-
-// Build quake history table.
+// Build users table.
 const setupQuakeHistoryTable = async () => {
   await createTable();
-  await enableTTL();
 };
 
 setupQuakeHistoryTable();

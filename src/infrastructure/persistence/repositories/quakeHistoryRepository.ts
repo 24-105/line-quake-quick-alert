@@ -12,8 +12,8 @@ import {
 } from 'src/config/constants';
 
 // Log message constants
-const CHECK_QUAKE_ID_FAILED_LOG = 'Failed to fetch quake history quakeID.';
-const PUT_QUAKE_ID_FAILED_LOG = 'Failed to put quakeID.';
+const CHECK_QUAKE_ID_FAILED_LOG = 'Failed to fetch quake history quakeId.';
+const PUT_QUAKE_ID_FAILED_LOG = 'Failed to put quakeId.';
 
 /**
  * Quake history repository
@@ -42,13 +42,13 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
 
   /**
    * Check if quake ID exists in the table.
-   * @param quakeID quake ID
+   * @param quakeId quake ID
    * @returns true: quake ID exists, false: quake ID does not exist
    */
-  async isQuakeIdExists(quakeID: string): Promise<boolean> {
+  async isQuakeIdExists(quakeId: string): Promise<boolean> {
     const params = {
       TableName: this.tableName,
-      Key: { quakeID: quakeID },
+      Key: { quakeId: quakeId },
     };
     try {
       const result = await this.dynamoDbClient.send(new GetCommand(params));
@@ -57,20 +57,20 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
       }
       return false;
     } catch (err) {
-      this.logger.error(`${CHECK_QUAKE_ID_FAILED_LOG}: ${quakeID}`, err.stack);
+      this.logger.error(`${CHECK_QUAKE_ID_FAILED_LOG}: ${quakeId}`, err.stack);
       throw err;
     }
   }
 
   /**
-   * Put quake ID in the table.
-   * @param quakeID quake ID
+   * Put quake Id in the table.
+   * @param quakeId quake ID
    */
-  async putQuakeId(quakeID: string): Promise<void> {
+  async putQuakeId(quakeId: string): Promise<void> {
     const params = {
       TableName: this.tableName,
       Item: {
-        quakeID: quakeID,
+        quakeId: quakeId,
         TTL: QUAKE_ID_VALID_TIME,
       },
     };
