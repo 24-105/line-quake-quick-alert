@@ -5,11 +5,12 @@ import { P2P_GET_QUAKE_HISTORY_CODE } from 'src/config/constants';
 import { IQuakeBatchService } from 'src/domain/interfaces/services/quakeBatchService';
 
 // Log message constants
-const START_FETCH_QUAKE_HISTORY_BATCH_LOG = 'Start fetch quake history batch.';
-const FETCH_QUAKE_HISTORY_BATCH_SUCCESS_LOG =
-  'Fetch quake history batch successfully.';
-const FETCH_QUAKE_HISTORY_BATCH_FAILED_LOG =
-  'Fetch quake history batch failed.';
+const LOG_MESSAGES = {
+  START_PROCESS_QUAKE_HISTORY_BATCH: 'Start process quake history batch.',
+  PROCESS_QUAKE_HISTORY_BATCH_SUCCESS:
+    'Process quake history batch successfully.',
+  PROCESS_QUAKE_HISTORY_BATCH_FAILED: 'Process quake history batch failed.',
+};
 
 /**
  * Quake batch service
@@ -21,23 +22,24 @@ export class QuakeBatchService implements IQuakeBatchService {
   constructor(private readonly quakeService: QuakeService) {}
 
   /**
-   * Batch to fetch quake history.
-   * @param codes quake history code
-   * @param limit Number of returned items
-   * @param offset Number of items to skip
-   * @returns P2P地震情報 API quake history response Dto
+   * Batch process to fetch, save, and notify quake history.
    */
-  @Cron(CronExpression.EVERY_10_SECONDS)
-  async fetchQuakeHistoryBatch(): Promise<void> {
-    this.logger.log(START_FETCH_QUAKE_HISTORY_BATCH_LOG);
+  // @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async processQuakeHistoryBatch(): Promise<void> {
+    this.logger.log(LOG_MESSAGES.START_PROCESS_QUAKE_HISTORY_BATCH);
     const codes = P2P_GET_QUAKE_HISTORY_CODE; // fixed argument
     const limit = 5; // fixed argument
     const offset = 0; // fixed argument
+
     try {
-      await this.quakeService.fetchQuakeHistory(codes, limit, offset);
-      this.logger.log(FETCH_QUAKE_HISTORY_BATCH_SUCCESS_LOG);
+      await this.quakeService.processQuakeHistory(codes, limit, offset);
+      this.logger.log(LOG_MESSAGES.PROCESS_QUAKE_HISTORY_BATCH_SUCCESS);
     } catch (err) {
-      this.logger.error(FETCH_QUAKE_HISTORY_BATCH_FAILED_LOG);
+      this.logger.error(
+        LOG_MESSAGES.PROCESS_QUAKE_HISTORY_BATCH_FAILED,
+        err.stack,
+      );
       throw err;
     }
   }

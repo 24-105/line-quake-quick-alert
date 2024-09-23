@@ -6,14 +6,16 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { fetchQuakeHistoryRequestDto } from 'src/application/dto/quakeHistoryDto';
+import { processQuakeHistoryRequestDto as processQuakeHistoryRequestDto } from 'src/application/dto/quakeHistoryDto';
 import { QuakeService } from 'src/application/services/quakeService';
 
 // Log message constants
-const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history.';
-const REQUEST_FETCH_QUAKE_HISTORY_SUCCESS_LOG =
-  'Quake history successfully fetched.';
-const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history.';
+const LOG_MESSAGES = {
+  REQUEST_PROCESS_QUAKE_HISTORY: 'Requesting process quake history.',
+  REQUEST_PROCESS_QUAKE_HISTORY_SUCCESS:
+    'Quake history successfully processed.',
+  REQUEST_PROCESS_QUAKE_HISTORY_FAILED: 'Failed to process quake history.',
+};
 
 /**
  * Quake controller
@@ -25,24 +27,26 @@ export class QuakeController {
   constructor(private readonly quakeService: QuakeService) {}
 
   /**
-   * Fetch quake history.
+   * Process quake history.
    * @param request request parameters
-   * @returns quake history DTO
    */
   @Get('history')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async fetchQuakeHistory(
-    @Query() request: fetchQuakeHistoryRequestDto,
+  async processQuakeHistory(
+    @Query() request: processQuakeHistoryRequestDto,
   ): Promise<void> {
-    this.logger.log(REQUEST_FETCH_QUAKE_HISTORY_LOG);
+    this.logger.log(LOG_MESSAGES.REQUEST_PROCESS_QUAKE_HISTORY);
 
     const { codes, limit, offset } = request;
 
     try {
-      await this.quakeService.fetchQuakeHistory(codes, limit, offset);
-      this.logger.log(REQUEST_FETCH_QUAKE_HISTORY_SUCCESS_LOG);
+      await this.quakeService.processQuakeHistory(codes, limit, offset);
+      this.logger.log(LOG_MESSAGES.REQUEST_PROCESS_QUAKE_HISTORY_SUCCESS);
     } catch (err) {
-      this.logger.error(REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG, err.stack);
+      this.logger.error(
+        LOG_MESSAGES.REQUEST_PROCESS_QUAKE_HISTORY_FAILED,
+        err.stack,
+      );
       throw err;
     }
   }

@@ -1,22 +1,27 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { fetchChannelAccessTokenResponseDto } from '../dto/channelAccessTokenDto';
-import { LineMessagingApiService } from 'src/infrastructure/api/line/lineMessagingApiService';
 import { IChannelAccessTokenService } from 'src/domain/interfaces/services/channelAccessTokenService';
 import { ChannelAccessTokenRepository } from 'src/infrastructure/persistence/repositories/channelAccessTokenRepository';
 import { generateJwt } from 'src/domain/useCase/jwt';
+import { ChannelAccessTokenApi } from 'src/infrastructure/api/line/channelAccessTokenApi';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Log message constants
-const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG =
-  'Requesting fetch channel access token.';
-const GENERATE_JWT_LOG = 'Trying to generate JWT.';
-const GENERATE_JWT_FAILED_LOG = 'Failed to generate JWT.';
-const FETCH_CHANNEL_ACCESS_TOKEN_LOG = 'Trying to fetch channel access token.';
-const FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
-  'Failed to fetch channel access token.';
-const UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_SUCCESS_LOG =
-  'Successfully updated channel access token.';
-const UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_FAILED_LOG =
-  'Failed to update channel access token.';
+const LOG_MESSAGES = {
+  REQUEST_PROCESS_CHANNEL_ACCESS_TOKEN:
+    'Requesting process channel access token.',
+  GENERATE_JWT: 'Trying to generate JWT.',
+  GENERATE_ADMIN_JWT: 'Trying to generate admin JWT.',
+  GENERATE_JWT_FAILED: 'Failed to generate JWT.',
+  GENERATE_JWT_ADMIN_FAILED: 'Failed to generate admin JWT.',
+  FETCH_CHANNEL_ACCESS_TOKEN: 'Trying to fetch channel access token.',
+  FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS:
+    'Successfully fetched channel access token.',
+  FETCH_CHANNEL_ACCESS_TOKEN_FAILED: 'Failed to fetch channel access token.',
+  UPDATE_CHANNEL_ACCESS_TOKEN_SUCCESS:
+    'Successfully updated channel access token.',
+  UPDATE_CHANNEL_ACCESS_TOKEN_FAILED: 'Failed to update channel access token.',
+};
 
 /**
  * Channel access token service
@@ -26,37 +31,27 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
   private readonly logger = new Logger(ChannelAccessTokenService.name);
 
   constructor(
-    private readonly lineMessagingApiService: LineMessagingApiService,
+    private readonly channelAccessTokenApi: ChannelAccessTokenApi,
     private readonly channelAccessTokenRepository: ChannelAccessTokenRepository,
   ) {}
 
   /**
-   * Fetch channel access token.
-   * @returns channel access token
+   * Process channel access token.
    */
-  async fetchChannelAccessToken(): Promise<void> {
-    this.logger.log(REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG);
+  async processChannelAccessToken(): Promise<void> {
+    this.logger.log(LOG_MESSAGES.REQUEST_PROCESS_CHANNEL_ACCESS_TOKEN);
+
+    // read private key file
+    const privateKey = this.readKeyFile('key/private.key');
+    const adminPrivateKey = this.readKeyFile('key/admin-private.key');
+
     try {
-      let jwt: string;
-      try {
-        this.logger.log(GENERATE_JWT_LOG);
-        jwt = await generateJwt();
-      } catch (err) {
-        this.logger.error(GENERATE_JWT_FAILED_LOG, err.stack);
-        throw err;
-      }
-
-      const tokenResponse = await this.fetchChannelAccessTokenWithJwt(jwt);
-      this.logger.log(FETCH_CHANNEL_ACCESS_TOKEN_LOG);
-
-      await this.channelAccessTokenRepository.putChannelAccessToken(
-        tokenResponse.access_token,
-        tokenResponse.key_id,
-      );
-      this.logger.log(UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_SUCCESS_LOG);
+      const jwtList = await this.generateJwts(privateKey, adminPrivateKey);
+      await this.updateChannelAccessTokens(jwtList);
+      this.logger.log(LOG_MESSAGES.UPDATE_CHANNEL_ACCESS_TOKEN_SUCCESS);
     } catch (err) {
       this.logger.error(
-        UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_FAILED_LOG,
+        LOG_MESSAGES.UPDATE_CHANNEL_ACCESS_TOKEN_FAILED,
         err.stack,
       );
       throw err;
@@ -64,18 +59,83 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
   }
 
   /**
-   * Fetch channel access token using JWT.
-   * @param jwt JWT
-   * @returns channel access token
+   * Generate JWTs for both regular and admin.
+   * @param privateKey Private key
+   * @param adminPrivateKey Admin private key
+   * @returns List of JWTs
    */
-  private async fetchChannelAccessTokenWithJwt(
-    jwt: string,
-  ): Promise<fetchChannelAccessTokenResponseDto> {
+  private async generateJwts(
+    privateKey: string,
+    adminPrivateKey: string,
+  ): Promise<{ jwt: string; iss: string }[]> {
+    const jwtList = [];
+
     try {
-      return await this.lineMessagingApiService.fetchChannelAccessToken(jwt);
+      this.logger.log(LOG_MESSAGES.GENERATE_JWT);
+      const jwt = await generateJwt(
+        privateKey,
+        process.env.LINE_QUALE_QUICK_ALERT_KID,
+        process.env.LINE_QUALE_QUICK_ALERT_ISS,
+        process.env.LINE_QUALE_QUICK_ALERT_SUB,
+      );
+      jwtList.push({ jwt, iss: process.env.LINE_QUALE_QUICK_ALERT_ISS });
     } catch (err) {
-      this.logger.error(FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG, err.stack);
+      this.logger.error(LOG_MESSAGES.GENERATE_JWT_FAILED, err.stack);
       throw err;
     }
+
+    try {
+      this.logger.log(LOG_MESSAGES.GENERATE_ADMIN_JWT);
+      const jwt = await generateJwt(
+        adminPrivateKey,
+        process.env.LINE_QUALE_QUICK_ALERT_ADMIN_KID,
+        process.env.LINE_QUALE_QUICK_ALERT_ADMIN_ISS,
+        process.env.LINE_QUALE_QUICK_ALERT_ADMIN_SUB,
+      );
+      jwtList.push({ jwt, iss: process.env.LINE_QUALE_QUICK_ALERT_ADMIN_ISS });
+    } catch (err) {
+      this.logger.error(LOG_MESSAGES.GENERATE_JWT_ADMIN_FAILED, err.stack);
+      throw err;
+    }
+
+    return jwtList;
+  }
+
+  /**
+   * Update channel access tokens using the generated JWTs.
+   * @param jwtList List of JWTs
+   */
+  private async updateChannelAccessTokens(
+    jwtList: { jwt: string; iss: string }[],
+  ): Promise<void> {
+    for (const { jwt, iss } of jwtList) {
+      try {
+        const tokenResponse =
+          await this.channelAccessTokenApi.fetchChannelAccessToken(jwt);
+
+        await this.channelAccessTokenRepository.putChannelAccessToken(
+          iss,
+          tokenResponse.access_token,
+          tokenResponse.key_id,
+        );
+        this.logger.log(LOG_MESSAGES.FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS);
+      } catch (err) {
+        this.logger.error(
+          LOG_MESSAGES.FETCH_CHANNEL_ACCESS_TOKEN_FAILED,
+          err.stack,
+        );
+        throw err;
+      }
+    }
+  }
+
+  /**
+   * Read private key file.
+   * @param fileName private key file name
+   * @returns private key
+   */
+  private readKeyFile(relativeFilePath: string): string {
+    const filePath = path.join(process.cwd(), relativeFilePath);
+    return fs.readFileSync(filePath, 'utf8');
   }
 }

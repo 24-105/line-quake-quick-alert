@@ -1,9 +1,9 @@
-import { WebhookEvent, WebhookRequestBody } from '@line/bot-sdk';
+import { WebhookEvent } from '@line/bot-sdk';
 
 /**
- * LINE Webhook service interface
+ * LINE webhook service interface
  */
 export interface ILineWebhookService {
-  isValidWebhookRequest(body: any): body is WebhookRequestBody;
-  processEvent(events: WebhookEvent[]): Promise<void>;
+  isValidWebhookRequest(body: any): Promise<boolean>;
+  handleEvents(events: WebhookEvent[]): void;
 }

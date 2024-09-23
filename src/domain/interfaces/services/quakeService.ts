@@ -2,7 +2,7 @@
  * Quake service interface
  */
 export interface IQuakeService {
-  fetchQuakeHistory(
+  processQuakeHistory(
     codes: number,
     limit: number,
     offset: number,

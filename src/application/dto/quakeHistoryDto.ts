@@ -19,7 +19,7 @@ import {
 import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 
 // Quake history request DTO
-export class fetchQuakeHistoryRequestDto {
+export class processQuakeHistoryRequestDto {
   @IsNotEmpty()
   @IsInt()
   @Type(() => Number)

@@ -2,12 +2,14 @@ import { Controller, Get, Logger } from '@nestjs/common';
 import { ChannelAccessTokenService } from 'src/application/services/channelAccessTokenService';
 
 // Log message constants
-const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG =
-  'Requesting fetch channel access token.';
-const FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS_LOG =
-  'Channel access token successfully fetched.';
-const REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG =
-  'Failed to fetch channel access token.';
+const LOG_MESSAGES = {
+  REQUEST_PROCESS_CHANNEL_ACCESS_TOKEN:
+    'Requesting process channel access token.',
+  PROCESS_CHANNEL_ACCESS_TOKEN_SUCCESS:
+    'Channel access token successfully processed.',
+  PROCESS_CHANNEL_ACCESS_TOKEN_FAILED:
+    'Failed to process channel access token.',
+};
 
 /**
  * LINE authentication controller
@@ -19,19 +21,18 @@ export class LineAuthController {
   constructor(readonly channelAccessTokenService: ChannelAccessTokenService) {}
 
   /**
-   * Fetch channel access token.
-   * @returns channel access token
+   * Process channel access token.
    */
   @Get('channelAccessToken')
-  async fetchChannelAccessToken(): Promise<void> {
-    this.logger.log(REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_LOG);
+  async processChannelAccessToken(): Promise<void> {
+    this.logger.log(LOG_MESSAGES.REQUEST_PROCESS_CHANNEL_ACCESS_TOKEN);
 
     try {
-      await this.channelAccessTokenService.fetchChannelAccessToken();
-      this.logger.log(FETCH_CHANNEL_ACCESS_TOKEN_SUCCESS_LOG);
+      await this.channelAccessTokenService.processChannelAccessToken();
+      this.logger.log(LOG_MESSAGES.PROCESS_CHANNEL_ACCESS_TOKEN_SUCCESS);
     } catch (err) {
       this.logger.error(
-        REQUEST_FETCH_CHANNEL_ACCESS_TOKEN_FAILED_LOG,
+        LOG_MESSAGES.PROCESS_CHANNEL_ACCESS_TOKEN_FAILED,
         err.stack,
       );
       throw err;

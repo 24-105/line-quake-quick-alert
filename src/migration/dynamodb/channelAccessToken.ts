@@ -46,7 +46,7 @@ const createTable = async () => {
     const data = await client.send(new CreateTableCommand(params));
     console.log('ChannelAccessToken Table is successfully created', data);
   } catch (err) {
-    console.error('ChannelAccessToken Table is failed to create', err);
+    console.error('ChannelAccessToken Table is failed to create', err.stack);
     throw err;
   }
 };
@@ -65,7 +65,7 @@ const enableTTL = async () => {
     const data = await client.send(new UpdateTimeToLiveCommand(params));
     console.log('ChannelAccessToken Table is successfully updated', data);
   } catch (err) {
-    console.error('ChannelAccessToken Table is failed to update', err);
+    console.error('ChannelAccessToken Table is failed to update', err.stack);
     throw err;
   }
 };
