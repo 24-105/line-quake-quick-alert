@@ -6,10 +6,10 @@ import {
   KeyType,
 } from '@aws-sdk/client-dynamodb';
 import * as dotenv from 'dotenv';
-import { CHANNEL_ACCESS_TOKEN_TABLE_NAME } from 'src/config/constants';
+import { CHANNEL_ACCESS_TOKEN_TABLE_NAME } from '../../config/constants';
 
 // Get execution environment.
-const env = process.env.NODE_ENV || 'local';
+const env = process.env.NODE_ENV;
 
 // Import environment variable file.
 dotenv.config({ path: `.env.${env}` });

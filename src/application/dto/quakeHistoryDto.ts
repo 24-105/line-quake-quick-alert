@@ -11,12 +11,12 @@ import { Type } from 'class-transformer';
 import {
   EarthquakeDomesticTsunami,
   EarthquakeForeignTsunami,
-} from 'src/domain/enum/quakeHistrory/earthquakeEnum';
+} from 'src/domain/enum/quakeHistory/earthquakeEnum';
 import {
   IssueType,
   IssueCorrect,
-} from 'src/domain/enum/quakeHistrory/issueEnum';
-import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
+} from 'src/domain/enum/quakeHistory/issueEnum';
+import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 
 // Quake history request DTO
 export class fetchQuakeHistoryRequestDto {

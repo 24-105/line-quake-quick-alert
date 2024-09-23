@@ -37,7 +37,7 @@ export class LineWebhookService implements ILineWebhookService {
 
   /**
    * Check if the request body is valid.
-   * @param destination official LINE user ID
+   * @param destination official LINE user id
    * @returns true: valid, false: invalid
    */
   private isMatchingDestination(destination: string): boolean {

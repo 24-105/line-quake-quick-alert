@@ -134,6 +134,7 @@ $ docker-compose logs dynamodb-admin
 ```bash
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/channelAccessToken.ts
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/quakeHistory.ts
+$ NODE_ENV=local npx ts-node src/migration/dynamodb/users.ts
 ```
 
 ### AWS DynamoDBテーブルが作成されたか確認
@@ -148,6 +149,7 @@ $ aws dynamodb list-tables --endpoint-url http://localhost:8000
 ```bash
 $ aws dynamodb delete-table --table-name ChannelAccessToken --endpoint-url http://localhost:8000
 $ aws dynamodb delete-table --table-name QuakeHistory --endpoint-url http://localhost:8000
+$ aws dynamodb delete-table --table-name Users --endpoint-url http://localhost:8000
 ```
 
 ### Dockerコンテナーの停止と削除

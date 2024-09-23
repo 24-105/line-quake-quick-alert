@@ -4,12 +4,12 @@ import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 import { convertToUnixTime, getJstTime } from 'src/domain/useCase/date';
 import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
 import { isEventTimeValid } from 'src/domain/useCase/quakeEventTime';
-import { PointsScale } from 'src/domain/enum/quakeHistrory/pointsEnum';
+import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 
 // Log message constants
 const REQUEST_FETCH_QUAKE_HISTORY_LOG = 'Requesting fetch quake history.';
 const HISTORY_NOT_FOUND_LOG = 'No quake history found.';
-const PUT_QUAKE_ID_FAILED_LOG = 'Failed to put quakeID.';
+const PUT_QUAKE_ID_FAILED_LOG = 'Failed to put quakeId.';
 
 /**
  * Quake service
@@ -64,7 +64,7 @@ export class QuakeService implements IQuakeService {
         continue;
       }
 
-      // Check if the quake ID exists in the table.
+      // Check if the quake id exists in the table.
       if (await this.quakeHistoryRepository.isQuakeIdExists(history.id)) {
         continue;
       }
