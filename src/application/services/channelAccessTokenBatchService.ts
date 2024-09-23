@@ -4,12 +4,14 @@ import { IChannelAccessTokenBatchService } from 'src/domain/interfaces/services/
 import { ChannelAccessTokenService } from './channelAccessTokenService';
 
 // Log message constants
-const START_UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_LOG =
-  'Start update channel access token batch.';
-const UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_SUCCESS_LOG =
-  'Successfully updated channel access token.';
-const UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_FAILED_LOG =
-  'Failed to update channel access token.';
+const LOG_MESSAGES = {
+  START_PROCESS_CHANNEL_ACCESS_TOKEN_BATCH:
+    'Start process channel access token batch.',
+  PROCESS_CHANNEL_ACCESS_TOKEN_BATCH_SUCCESS:
+    'Successfully processed channel access token.',
+  PROCESS_CHANNEL_ACCESS_TOKEN_BATCH_FAILED:
+    'Failed to process channel access token.',
+};
 
 /**
  * Channel access token batch service
@@ -25,17 +27,18 @@ export class ChannelAccessTokenBatchService
   ) {}
 
   /**
-   * Batch to update channel access token.
+   * Batch process to fetch and update channel access token.
    */
+  // @Cron(CronExpression.EVERY_10_SECONDS)
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
-  async updateChannelAccessTokenBatch(): Promise<void> {
-    this.logger.log(START_UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_LOG);
+  async processChannelAccessTokenBatch(): Promise<void> {
+    this.logger.log(LOG_MESSAGES.START_PROCESS_CHANNEL_ACCESS_TOKEN_BATCH);
 
     try {
-      this.channelAccessTokenService.fetchChannelAccessToken();
-      this.logger.log(UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_SUCCESS_LOG);
+      await this.channelAccessTokenService.processChannelAccessToken();
+      this.logger.log(LOG_MESSAGES.PROCESS_CHANNEL_ACCESS_TOKEN_BATCH_SUCCESS);
     } catch (err) {
-      this.logger.log(UPDATE_CHANNEL_ACCESS_TOKEN_BATCH_FAILED_LOG);
+      this.logger.log(LOG_MESSAGES.PROCESS_CHANNEL_ACCESS_TOKEN_BATCH_FAILED);
       throw err;
     }
   }

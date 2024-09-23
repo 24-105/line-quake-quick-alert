@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { QuakeService } from 'src/application/services/quakeService';
-import { P2pQuakeApiService } from 'src/infrastructure/api/p2pQuake/p2pQuakeApiService';
+import { P2pQuakeApi } from 'src/infrastructure/api/p2pQuake/p2pQuakeApi';
 import { QuakeController } from 'src/presentation/controllers/quakeController';
 import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
 import { QuakeBatchService } from 'src/application/services/quakeBatchService';
@@ -15,7 +15,7 @@ import { QuakeBatchService } from 'src/application/services/quakeBatchService';
   providers: [
     QuakeService,
     QuakeBatchService,
-    P2pQuakeApiService,
+    P2pQuakeApi,
     QuakeHistoryRepository,
   ],
 })

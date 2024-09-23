@@ -2,8 +2,13 @@ import { Controller, Logger, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { LineWebhookService } from 'src/application/services/lineWebhookService';
 
+// Log message constants
+const LOG_MESSAGES = {
+  HANDLING_WEBHOOK_EVENTS_FAILED: 'Failed to handling webhook events.',
+};
+
 /**
- * LINE Webhook controller
+ * LINE webhook controller
  */
 @Controller('webhook')
 export class LineWebhookController {
@@ -24,14 +29,19 @@ export class LineWebhookController {
     const body = req.body;
 
     // Check if the request body is valid.
-    if (this.lineWebhookService.isValidWebhookRequest(body)) {
-      // Returns status code 200 immediately.
-      res.status(200).send('OK');
-
-      // Process the webhook events.
-      await this.lineWebhookService.processEvent(body.events);
-    } else {
+    if (!(await this.lineWebhookService.isValidWebhookRequest(body))) {
       res.status(400).send('Bad Request');
+      return;
+    }
+
+    // Returns status code 200 immediately.
+    res.status(200).send('OK');
+
+    try {
+      // Handle webhook events.
+      await this.lineWebhookService.handleEvents(body.events);
+    } catch (err) {
+      this.logger.error(LOG_MESSAGES.HANDLING_WEBHOOK_EVENTS_FAILED, err.stack);
     }
   }
 }

@@ -45,7 +45,7 @@ const createTable = async () => {
     const data = await client.send(new CreateTableCommand(params));
     console.log('Users Table is successfully created', data);
   } catch (err) {
-    console.error('Users Table is failed to create', err);
+    console.error('Users Table is failed to create', err.stack);
     throw err;
   }
 };
