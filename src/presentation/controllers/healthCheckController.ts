@@ -1,20 +1,17 @@
-import { Controller, Get, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Controller, Get, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 /**
- * HealthCheck Controller
+ * HealthCheck controller
  */
 @Controller('/')
 export class HealthCheckController {
   /**
-   * Executes health check.
-   * @param req request
+   * Handling backend application health check.
    * @param res response
    */
   @Get()
-  handleWebhook(@Req() req: Request, @Res() res: Response): void {
-    console.log(req.body);
-
+  handleWebhook(@Res() res: Response): void {
     // Returns status code 200.
     res.status(200).send('Quake Alert backend application is running.');
   }

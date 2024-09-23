@@ -25,6 +25,7 @@
     "@aws-sdk/client-dynamodb": "^3.651.1",
     "@aws-sdk/lib-dynamodb": "^3.651.1",
     "@aws-sdk/util-dynamodb": "^3.651.1",
+    "@line/bot-sdk": "^9.4.0",
     "@nestjs/axios": "^3.0.3",
     "@nestjs/class-validator": "^0.13.4",
     "@nestjs/common": "^10.4.2",

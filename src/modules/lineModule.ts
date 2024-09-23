@@ -6,6 +6,7 @@ import { LineWebhookController } from 'src/presentation/controllers/lineWebhookC
 import { ChannelAccessTokenService } from 'src/application/services/channelAccessTokenService';
 import { ChannelAccessTokenBatchService } from 'src/application/services/channelAccessTokenBatchService';
 import { ChannelAccessTokenRepository } from 'src/infrastructure/persistence/repositories/channelAccessTokenRepository';
+import { LineWebhookService } from 'src/application/services/lineWebhookService';
 
 /**
  * LINE module
@@ -16,6 +17,7 @@ import { ChannelAccessTokenRepository } from 'src/infrastructure/persistence/rep
   providers: [
     ChannelAccessTokenService,
     ChannelAccessTokenBatchService,
+    LineWebhookService,
     LineMessagingApiService,
     ChannelAccessTokenRepository,
   ],
