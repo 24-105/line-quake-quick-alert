@@ -64,7 +64,7 @@ export class QuakeService implements IQuakeService {
         continue;
       }
 
-      // Check if the quake ID exists in the table.
+      // Check if the quake id exists in the table.
       if (await this.quakeHistoryRepository.isQuakeIdExists(history.id)) {
         continue;
       }

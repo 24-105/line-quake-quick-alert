@@ -41,9 +41,9 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
   }
 
   /**
-   * Check if quake ID exists in the table.
-   * @param quakeId quake ID
-   * @returns true: quake ID exists, false: quake ID does not exist
+   * Check if quake id exists in the table.
+   * @param quakeId quake id
+   * @returns true: quake id exists, false: quake id does not exist
    */
   async isQuakeIdExists(quakeId: string): Promise<boolean> {
     const params = {
@@ -63,8 +63,8 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
   }
 
   /**
-   * Put quake Id in the table.
-   * @param quakeId quake ID
+   * Put quake id in the table.
+   * @param quakeId quake id
    */
   async putQuakeId(quakeId: string): Promise<void> {
     const params = {
