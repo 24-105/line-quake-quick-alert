@@ -14,7 +14,7 @@ const REQUEST_QUAKE_HISTORY_LOG =
 const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history.';
 
 /**
- * P2P地震情報 API Service
+ * P2P地震情報 API service
  */
 @Injectable()
 export class P2pQuakeApiService implements IP2pQuakeApiService {
