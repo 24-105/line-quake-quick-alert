@@ -8,6 +8,7 @@ import {
   LINE_API_OAUTH_VERIFY_URL,
 } from 'src/config/constants';
 import { IChannelAccessTokenApi } from 'src/domain/interfaces/api/line/channelAccessTokenApi';
+import { createEncodeHeaders } from 'src/domain/useCase/http';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -40,7 +41,7 @@ export class ChannelAccessTokenApi implements IChannelAccessTokenApi {
     this.logger.log(LOG_MESSAGES.REQUEST_FETCH_CHANNEL_ACCESS_TOKEN);
 
     const url = LINE_API_OAUTH_TOKEN_URL;
-    const headers = this.createEncodeHeaders();
+    const headers = createEncodeHeaders();
     const params = this.createRequestParams(jwt);
 
     try {
@@ -62,34 +63,18 @@ export class ChannelAccessTokenApi implements IChannelAccessTokenApi {
   async verifyChannelAccessToken(channelAccessToken: string): Promise<boolean> {
     this.logger.log(LOG_MESSAGES.REQUEST_VERIFY_CHANNEL_ACCESS_TOKEN);
 
-    const url = `${LINE_API_OAUTH_VERIFY_URL}/${channelAccessToken}`;
-    const headers = this.createJsonHeaders();
+    const url = `${LINE_API_OAUTH_VERIFY_URL}?access_token=${channelAccessToken}`;
+    const headers = createEncodeHeaders();
 
     try {
       const response = await firstValueFrom(
         this.httpService.get(url, { headers }),
       );
-      return response.data;
+      return !!response.data;
     } catch (err) {
       this.logger.error(LOG_MESSAGES.VERIFY_ACCESS_TOKEN_FAILED, err.stack);
       throw err;
     }
-  }
-
-  /**
-   * Create headers for the request.
-   * @returns Headers object
-   */
-  private createEncodeHeaders() {
-    return { 'Content-Type': 'application/x-www-form-urlencoded' };
-  }
-
-  /**
-   * Create headers for the request.
-   * @returns Headers object
-   */
-  private createJsonHeaders() {
-    return { 'Content-Type': 'application/json' };
   }
 
   /**

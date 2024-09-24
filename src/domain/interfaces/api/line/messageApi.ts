@@ -5,6 +5,6 @@ export interface IMessageApi {
   pushMessage(
     channelAccessToken: string,
     to: string,
-    messages: string[],
+    messages: { type: string; text: string }[],
   ): Promise<void>;
 }

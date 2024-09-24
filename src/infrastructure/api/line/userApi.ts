@@ -4,11 +4,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import { LINE_API_GET_USER_PROFILE_URL } from 'src/config/constants';
 import { IUserApi } from 'src/domain/interfaces/api/line/userApi';
+import { createAuthHeaders } from 'src/domain/useCase/http';
 
 // Log message constants
 const LOG_MESSAGES = {
   REQUEST_USER_PROFILE: 'Requesting user profile from the LINE Messaging API.',
-  FETCH_USER_PROFILE_FAILED: 'Failed to fetch user profile.',
+  FETCH_USER_PROFILE_FAILED:
+    'Failed to fetch user profile from the LINE Messaging API.',
 };
 
 /**
@@ -32,8 +34,8 @@ export class UserApi implements IUserApi {
   ): Promise<UserProfileResponse> {
     this.logger.log(LOG_MESSAGES.REQUEST_USER_PROFILE);
 
-    const url = this.createUrl(userId);
-    const headers = this.createHeaders(channelAccessToken);
+    const url = `${LINE_API_GET_USER_PROFILE_URL}${userId}`;
+    const headers = createAuthHeaders(channelAccessToken);
 
     try {
       const response = await firstValueFrom(
@@ -44,26 +46,5 @@ export class UserApi implements IUserApi {
       this.logger.error(LOG_MESSAGES.FETCH_USER_PROFILE_FAILED, err.stack);
       throw err;
     }
-  }
-
-  /**
-   * Create URL for the request.
-   * @param userId User Id
-   * @returns URL string
-   */
-  private createUrl(userId: string): string {
-    return `${LINE_API_GET_USER_PROFILE_URL}/${userId}`;
-  }
-
-  /**
-   * Create headers for the request.
-   * @param channelAccessToken Channel access token
-   * @returns Headers object
-   */
-  private createHeaders(channelAccessToken: string): Record<string, string> {
-    return {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${channelAccessToken}`,
-    };
   }
 }

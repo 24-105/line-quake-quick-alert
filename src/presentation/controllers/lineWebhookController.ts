@@ -4,6 +4,8 @@ import { LineWebhookService } from 'src/application/services/lineWebhookService'
 
 // Log message constants
 const LOG_MESSAGES = {
+  HANDLING_WEBHOOK_EVENTS: 'Handling LINE webhook events.',
+  WEBHOOK_EVENTS_BAD_REQUEST: 'Bad request for webhook events.',
   HANDLING_WEBHOOK_EVENTS_FAILED: 'Failed to handling webhook events.',
 };
 
@@ -26,22 +28,31 @@ export class LineWebhookController {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    const body = req.body;
-
-    // Check if the request body is valid.
-    if (!(await this.lineWebhookService.isValidWebhookRequest(body))) {
-      res.status(400).send('Bad Request');
-      return;
-    }
+    this.logger.log(LOG_MESSAGES.HANDLING_WEBHOOK_EVENTS);
 
     // Returns status code 200 immediately.
     res.status(200).send('OK');
 
+    const body = req.body;
+    const signature = req.headers['x-line-signature'] as string;
+
+    // Verify the signature.
+    if (!this.lineWebhookService.verifySignature(body, signature)) {
+      this.logger.error(LOG_MESSAGES.WEBHOOK_EVENTS_BAD_REQUEST);
+      return;
+    }
+
+    // Check if the request body is valid.
+    if (!this.lineWebhookService.isWebhookRequestBody(body)) {
+      this.logger.error(LOG_MESSAGES.WEBHOOK_EVENTS_BAD_REQUEST);
+      return;
+    }
+
     try {
-      // Handle webhook events.
-      await this.lineWebhookService.handleEvents(body.events);
+      this.lineWebhookService.handleEvents(body.events);
     } catch (err) {
       this.logger.error(LOG_MESSAGES.HANDLING_WEBHOOK_EVENTS_FAILED, err.stack);
+      throw err;
     }
   }
 }

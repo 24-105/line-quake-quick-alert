@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IQuakeService } from 'src/domain/interfaces/services/quakeService';
 import { convertToUnixTime, getJstTime } from 'src/domain/useCase/date';
-import { QuakeHistoryRepository } from 'src/infrastructure/persistence/repositories/quakeHistoryRepository';
+import { QuakeHistoryRepository } from 'src/infrastructure/repositories/quakeHistoryRepository';
 import { isEventTimeValid } from 'src/domain/useCase/quakeEventTime';
 import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 import { P2pQuakeApi } from 'src/infrastructure/api/p2pQuake/p2pQuakeApi';

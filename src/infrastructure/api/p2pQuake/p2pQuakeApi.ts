@@ -7,11 +7,13 @@ import {
 } from 'src/application/dto/quakeHistoryDto';
 import { P2P_GET_QUAKE_HISTORY_URL } from 'src/config/constants';
 import { IP2pQuakeApi } from 'src/domain/interfaces/api/p2pQuake/p2pQuakeApi';
+import { createHeaders } from 'src/domain/useCase/http';
 
 // Log message constants
 const LOG_MESSAGES = {
-  REQUEST_QUAKE_HISTORY: 'Fetching quake history from the P2P Quake API.',
-  REQUEST_FETCH_QUAKE_HISTORY_FAILED: 'Failed to fetch quake history.',
+  REQUEST_FETCH_QUAKE_HISTORY: 'Fetching quake history from the P2P Quake API.',
+  REQUEST_FETCH_QUAKE_HISTORY_FAILED:
+    'Failed to fetch quake history from the P2P Quake API.',
 };
 
 /**
@@ -36,12 +38,13 @@ export class P2pQuakeApi implements IP2pQuakeApi {
     limit: number,
     offset: number,
   ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
+    const headers = createHeaders();
     const params = this.createParams(codes, limit, offset);
 
     try {
-      this.logger.log(LOG_MESSAGES.REQUEST_QUAKE_HISTORY);
+      this.logger.log(LOG_MESSAGES.REQUEST_FETCH_QUAKE_HISTORY);
       const response = await firstValueFrom(
-        this.httpService.get(P2P_GET_QUAKE_HISTORY_URL, { params }),
+        this.httpService.get(P2P_GET_QUAKE_HISTORY_URL, { params, headers }),
       );
       return response.data;
     } catch (err) {
