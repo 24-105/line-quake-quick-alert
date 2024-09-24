@@ -1,23 +1,30 @@
 import * as jose from 'node-jose';
-import { JWT_EXPIRATION_TIME } from 'src/config/constants';
+import { JWT_EXPIRATION_TIME, LINE_API_BASE_URL } from 'src/config/constants';
 
 /**
  * Generate JWT.
+ * @param privateKey
+ * @param kid
+ * @param iss
+ * @param sub
  * @returns JWT
  */
-export const generateJwt = async (): Promise<string> => {
-  const privateKey = process.env.LINE_QUALE_QUICK_ALERT_SECRET_KEY;
-
+export const generateJwt = async (
+  privateKey: string,
+  kid: string,
+  iss: string,
+  sub: string,
+): Promise<string> => {
   const header = {
     alg: 'RS256',
     typ: 'JWT',
-    kid: process.env.LINE_QUALE_QUICK_ALERT_KID,
+    kid: kid,
   };
 
   const payload = {
-    iss: process.env.LINE_QUALE_QUICK_ALERT_ISS,
-    sub: process.env.LINE_QUALE_QUICK_ALERT_SUB,
-    aud: 'https://api.line.me/',
+    iss: iss,
+    sub: sub,
+    aud: LINE_API_BASE_URL,
     exp: Math.floor(new Date().getTime() / 1000) + 60 * 30,
     token_exp: JWT_EXPIRATION_TIME,
   };

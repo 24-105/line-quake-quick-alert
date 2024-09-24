@@ -12,8 +12,10 @@ import {
 } from 'src/config/constants';
 
 // Log message constants
-const CHECK_QUAKE_ID_FAILED_LOG = 'Failed to fetch quake history quakeId.';
-const PUT_QUAKE_ID_FAILED_LOG = 'Failed to put quakeId.';
+const LOG_MESSAGES = {
+  CHECK_QUAKE_ID_FAILED: 'Failed to fetch quake history quakeId.',
+  PUT_QUAKE_ID_FAILED: 'Failed to put quakeId.',
+};
 
 /**
  * Quake history repository
@@ -50,14 +52,12 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
       TableName: this.tableName,
       Key: { quakeId: quakeId },
     };
+
     try {
       const result = await this.dynamoDbClient.send(new GetCommand(params));
-      if (result.Item) {
-        return true;
-      }
-      return false;
+      return !!result.Item;
     } catch (err) {
-      this.logger.error(`${CHECK_QUAKE_ID_FAILED_LOG}: ${quakeId}`, err.stack);
+      this.logger.error(LOG_MESSAGES.CHECK_QUAKE_ID_FAILED, err.stack);
       throw err;
     }
   }
@@ -74,10 +74,11 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
         TTL: QUAKE_ID_VALID_TIME,
       },
     };
+
     try {
       await this.dynamoDbClient.send(new PutCommand(params));
     } catch (err) {
-      this.logger.error(PUT_QUAKE_ID_FAILED_LOG, err.stack);
+      this.logger.error(LOG_MESSAGES.PUT_QUAKE_ID_FAILED, err.stack);
       throw err;
     }
   }

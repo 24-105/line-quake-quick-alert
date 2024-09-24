@@ -5,20 +5,23 @@ import {
   FetchP2pQuakeHistoryRequestDto,
   fetchP2pQuakeHistoryResponseDto,
 } from 'src/application/dto/quakeHistoryDto';
-import { IP2pQuakeApiService } from 'src/domain/interfaces/api/p2pQuakeApiService';
 import { P2P_GET_QUAKE_HISTORY_URL } from 'src/config/constants';
+import { IP2pQuakeApi } from 'src/domain/interfaces/api/p2pQuake/p2pQuakeApi';
+import { createHeaders } from 'src/domain/useCase/http';
 
 // Log message constants
-const REQUEST_QUAKE_HISTORY_LOG =
-  'Fetching quake history from the P2P Quake API.';
-const REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG = 'Failed to fetch quake history.';
+const LOG_MESSAGES = {
+  REQUEST_FETCH_QUAKE_HISTORY: 'Fetching quake history from the P2P Quake API.',
+  REQUEST_FETCH_QUAKE_HISTORY_FAILED:
+    'Failed to fetch quake history from the P2P Quake API.',
+};
 
 /**
- * P2P地震情報 API service
+ * P2P地震情報 API
  */
 @Injectable()
-export class P2pQuakeApiService implements IP2pQuakeApiService {
-  private readonly logger = new Logger(P2pQuakeApiService.name);
+export class P2pQuakeApi implements IP2pQuakeApi {
+  private readonly logger = new Logger(P2pQuakeApi.name);
 
   constructor(private readonly httpService: HttpService) {}
 
@@ -35,18 +38,20 @@ export class P2pQuakeApiService implements IP2pQuakeApiService {
     limit: number,
     offset: number,
   ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
-    // create request parameters.
+    const headers = createHeaders();
     const params = this.createParams(codes, limit, offset);
 
-    // Fetch quake history from P2P地震情報 API.
     try {
-      this.logger.log(REQUEST_QUAKE_HISTORY_LOG);
+      this.logger.log(LOG_MESSAGES.REQUEST_FETCH_QUAKE_HISTORY);
       const response = await firstValueFrom(
-        this.httpService.get(P2P_GET_QUAKE_HISTORY_URL, { params }),
+        this.httpService.get(P2P_GET_QUAKE_HISTORY_URL, { params, headers }),
       );
       return response.data;
     } catch (err) {
-      this.logger.error(`${REQUEST_FETCH_QUAKE_HISTORY_FAILED_LOG}`, err.stack);
+      this.logger.error(
+        LOG_MESSAGES.REQUEST_FETCH_QUAKE_HISTORY_FAILED,
+        err.stack,
+      );
       throw err;
     }
   }

@@ -1,67 +1,73 @@
+import * as crypto from 'crypto';
 import { Injectable, Logger } from '@nestjs/common';
-import { WebhookRequestBody, WebhookEvent } from '@line/bot-sdk';
+import { WebhookEvent } from '@line/bot-sdk';
 import { ILineWebhookService } from 'src/domain/interfaces/services/lineWebhookService';
+import { MessageEventService } from './messageEventService';
+import { isWebhookRequestBody } from 'src/domain/useCase/webhookEvent';
+
+// Log message constants
+const LOG_MESSAGES = {
+  EVENT_TYPE_NOT_SUPPORTED: 'Event types not supported.',
+};
 
 /**
- * LINE Webhook service
+ * LINE webhook service
  */
 @Injectable()
 export class LineWebhookService implements ILineWebhookService {
   private readonly logger = new Logger(LineWebhookService.name);
 
+  constructor(private readonly messageEventService: MessageEventService) {}
+
+  /**
+   * Verify the signature.
+   * @param body request body
+   * @param signature signature
+   * @returns true: valid signature, false: invalid signature
+   */
+  verifySignature(body: any, signature: string): boolean {
+    const channelSecret = process.env.LINE_QUALE_QUICK_ALERT_SECRET;
+    const hash = crypto
+      .createHmac('SHA256', channelSecret)
+      .update(JSON.stringify(body))
+      .digest('base64');
+    return hash === signature;
+  }
+
   /**
    * Validate the webhook request body.
    * @param body request body
-   * @returns true: valid, false: invalid
+   * @returns
    */
-  isValidWebhookRequest(body: any): body is WebhookRequestBody {
-    return (
-      this.isWebhookRequestBody(body) &&
-      this.isMatchingDestination(body.destination)
-    );
+  isWebhookRequestBody(body: any): boolean {
+    return isWebhookRequestBody(body);
   }
 
   /**
-   * Type guard to check if the body is WebhookRequestBody
-   * @param body request body
-   * @returns true: WebhookRequestBody, false: not WebhookRequestBody
-   */
-  private isWebhookRequestBody(body: any): body is WebhookRequestBody {
-    return (
-      typeof body === 'object' &&
-      body !== null &&
-      'destination' in body &&
-      'events' in body
-    );
-  }
-
-  /**
-   * Check if the request body is valid.
-   * @param destination official LINE user id
-   * @returns true: valid, false: invalid
-   */
-  private isMatchingDestination(destination: string): boolean {
-    return destination === process.env.LINE_QUALE_QUICK_ALERT_USER_ID;
-  }
-
-  /**
-   * Process the webhook events.
+   * Handle webhook events.
    * @param events array of webhook events
    */
-  async processEvent(events: WebhookEvent[]): Promise<void> {
+  handleEvents(events: WebhookEvent[]): void {
     for (const event of events) {
-      switch (event.type) {
-        case 'follow':
-          this.logger.log('Follow event received');
-          break;
-        case 'unfollow':
-          this.logger.log('Unfollow event received');
-          break;
-        case 'message':
-          this.logger.log('Message event received');
-        default:
-          this.logger.log('Unknown event type');
-      }
+      this.handleEvent(event);
+    }
+  }
+
+  /**
+   * Handle a single webhook event.
+   * @param event webhook event
+   */
+  private handleEvent(event: WebhookEvent): void {
+    switch (event.type) {
+      case 'message':
+        this.messageEventService.handleMessageEvent(event);
+        break;
+      case 'follow':
+        break;
+      case 'unfollow':
+        break;
+      default:
+        this.logger.warn(LOG_MESSAGES.EVENT_TYPE_NOT_SUPPORTED, event.type);
     }
   }
 }
