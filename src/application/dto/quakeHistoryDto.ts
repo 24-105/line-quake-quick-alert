@@ -1,12 +1,10 @@
 import {
   IsBoolean,
-  IsInt,
   IsNotEmpty,
   IsNumber,
   IsString,
   Min,
 } from '@nestjs/class-validator';
-import { Type } from 'class-transformer';
 
 import {
   EarthquakeDomesticTsunami,
@@ -17,26 +15,6 @@ import {
   IssueCorrect,
 } from 'src/domain/enum/quakeHistory/issueEnum';
 import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
-
-// Quake history request DTO
-export class fetchQuakeHistoryRequestDto {
-  @IsNotEmpty()
-  @IsInt()
-  @Type(() => Number)
-  codes: number;
-
-  @IsNotEmpty()
-  @IsInt()
-  @Min(1)
-  @Type(() => Number)
-  limit: number;
-
-  @IsNotEmpty()
-  @IsInt()
-  @Min(0)
-  @Type(() => Number)
-  offset: number;
-}
 
 // Quake history issue
 class QuakeHistoryIssue {
