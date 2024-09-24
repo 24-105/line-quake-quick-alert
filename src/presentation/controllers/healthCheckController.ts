@@ -9,7 +9,7 @@ const LOG_MESSAGES = {
 /**
  * HealthCheck controller
  */
-@Controller('/')
+@Controller('/health')
 export class HealthCheckController {
   /**
    * Handling backend application health check.

@@ -1,10 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { IChannelAccessTokenService } from 'src/domain/interfaces/services/channelAccessTokenService';
-import { ChannelAccessTokenRepository } from 'src/infrastructure/persistence/repositories/channelAccessTokenRepository';
+import { ChannelAccessTokenRepository } from 'src/infrastructure/repositories/channelAccessTokenRepository';
 import { generateJwt } from 'src/domain/useCase/jwt';
-import { ChannelAccessTokenApi } from 'src/infrastructure/api/line/channelAccessTokenApi';
 import * as fs from 'fs';
 import * as path from 'path';
+import { ChannelAccessTokenApi } from 'src/infrastructure/api/line/channelAccessTokenApi';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -56,6 +56,49 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
       );
       throw err;
     }
+  }
+
+  /**
+   * Get channel access token.
+   * @returns channel access token
+   */
+  async getChannelAccessToken(): Promise<string> {
+    const channelAccessToken = await this.fetchChannelAccessToken();
+    const isValidToken =
+      await this.verifyChannelAccessToken(channelAccessToken);
+
+    if (isValidToken) {
+      return channelAccessToken;
+    }
+
+    return await this.refreshChannelAccessToken();
+  }
+  /**
+   * Fetch channel access token from repository.
+   * @returns channel access token
+   */
+  private async fetchChannelAccessToken(): Promise<string> {
+    return await this.channelAccessTokenRepository.getChannelAccessToken(
+      process.env.LINE_QUALE_QUICK_ALERT_ADMIN_ISS,
+    );
+  }
+
+  /**
+   * Verify if the channel access token is valid.
+   * @param token channel access token
+   * @returns true if valid, false otherwise
+   */
+  private async verifyChannelAccessToken(token: string): Promise<boolean> {
+    return await this.channelAccessTokenApi.verifyChannelAccessToken(token);
+  }
+
+  /**
+   * Refresh the channel access token.
+   * @returns new channel access token
+   */
+  private async refreshChannelAccessToken(): Promise<string> {
+    await this.processChannelAccessToken();
+    return await this.fetchChannelAccessToken();
   }
 
   /**

@@ -1,9 +1,9 @@
+import * as crypto from 'crypto';
 import { Injectable, Logger } from '@nestjs/common';
 import { WebhookEvent } from '@line/bot-sdk';
 import { ILineWebhookService } from 'src/domain/interfaces/services/lineWebhookService';
 import { MessageEventService } from './messageEventService';
 import { isWebhookRequestBody } from 'src/domain/useCase/webhookEvent';
-import { isMatchingDestination } from 'src/domain/useCase/matchingDestination';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -20,15 +20,27 @@ export class LineWebhookService implements ILineWebhookService {
   constructor(private readonly messageEventService: MessageEventService) {}
 
   /**
+   * Verify the signature.
+   * @param body request body
+   * @param signature signature
+   * @returns true: valid signature, false: invalid signature
+   */
+  verifySignature(body: any, signature: string): boolean {
+    const channelSecret = process.env.LINE_QUALE_QUICK_ALERT_SECRET;
+    const hash = crypto
+      .createHmac('SHA256', channelSecret)
+      .update(JSON.stringify(body))
+      .digest('base64');
+    return hash === signature;
+  }
+
+  /**
    * Validate the webhook request body.
    * @param body request body
    * @returns
    */
-  async isValidWebhookRequest(body: any): Promise<boolean> {
-    return (
-      (await isWebhookRequestBody(body)) &&
-      (await isMatchingDestination(body.destination))
-    );
+  isWebhookRequestBody(body: any): boolean {
+    return isWebhookRequestBody(body);
   }
 
   /**

@@ -1,13 +1,16 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { LINE_API_OAUTH_TOKEN_URL } from 'src/config/constants';
+import { LINE_API_PUSH_MESSAGE_URL } from 'src/config/constants';
 import { IMessageApi } from 'src/domain/interfaces/api/line/messageApi';
+import { createAuthHeaders } from 'src/domain/useCase/http';
 
 // Log message constants
 const LOG_MESSAGES = {
-  REQUEST_PUSH_MESSAGE: 'Requesting to push message.',
-  POST_PUSH_MESSAGE_FAILED: 'Failed to post push message.',
+  REQUEST_PUSH_MESSAGE:
+    'Requesting to push a message via the LINE Messaging API.',
+  POST_PUSH_MESSAGE_FAILED:
+    'Failed to post push message via the LINE Messaging API.',
 };
 
 /**
@@ -27,12 +30,12 @@ export class MessageApi implements IMessageApi {
   async pushMessage(
     channelAccessToken: string,
     to: string,
-    messages: string[],
+    messages: { type: string; text: string }[],
   ): Promise<void> {
     this.logger.log(LOG_MESSAGES.REQUEST_PUSH_MESSAGE);
 
-    const url = LINE_API_OAUTH_TOKEN_URL;
-    const headers = this.createHeaders(channelAccessToken);
+    const url = LINE_API_PUSH_MESSAGE_URL;
+    const headers = createAuthHeaders(channelAccessToken);
     const body = this.createRequestBody(to, messages);
 
     try {
@@ -44,24 +47,15 @@ export class MessageApi implements IMessageApi {
   }
 
   /**
-   * Create headers for the request.
-   * @param channelAccessToken Access token for the channel
-   * @returns Headers object
-   */
-  private createHeaders(channelAccessToken: string) {
-    return {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${channelAccessToken}`,
-    };
-  }
-
-  /**
    * Create request body for the push message.
    * @param to ID of the target recipient
    * @param messages List of messages
    * @returns Request body object
    */
-  private createRequestBody(to: string, messages: string[]) {
+  private createRequestBody(
+    to: string,
+    messages: { type: string; text: string }[],
+  ) {
     return {
       to,
       messages,
