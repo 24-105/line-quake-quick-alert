@@ -32,6 +32,33 @@ export class UserService implements IUserService {
   }
 
   /**
+   * Update user's prefecture.
+   * @param userId user id
+   * @param prefecture prefecture
+   */
+  async updateUserPrefecture(
+    userId: string,
+    prefecture: string,
+  ): Promise<void> {
+    await this.userRepository.updateUserPrefecture(userId, prefecture);
+  }
+
+  /**
+   * Update user's seismic intensity.
+   * @param userId user id
+   * @param seismicIntensity seismic intensity
+   */
+  async updateUserSeismicIntensity(
+    userId: string,
+    seismicIntensity: string,
+  ): Promise<void> {
+    await this.userRepository.updateUserSeismicIntensity(
+      userId,
+      seismicIntensity,
+    );
+  }
+
+  /**
    * Check if user id exists.
    * @param userId user id
    * @returns true: user id exists, false: user id does not exist

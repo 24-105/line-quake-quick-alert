@@ -9,6 +9,8 @@ import { ChannelAccessTokenApi } from 'src/infrastructure/api/line/channelAccess
 import { MessageEventService } from 'src/application/services/messageEventService';
 import { UserApi } from 'src/infrastructure/api/line/userApi';
 import { MessageApi } from 'src/infrastructure/api/line/messageApi';
+import { UserRepository } from 'src/infrastructure/repositories/userRepository';
+import { UserService } from 'src/application/services/userService';
 
 /**
  * LINE module
@@ -21,9 +23,11 @@ import { MessageApi } from 'src/infrastructure/api/line/messageApi';
     ChannelAccessTokenBatchService,
     LineWebhookService,
     MessageEventService,
+    UserService,
     UserApi,
     MessageApi,
     ChannelAccessTokenApi,
+    UserRepository,
     ChannelAccessTokenRepository,
   ],
 })
