@@ -1,4 +1,3 @@
-import { IQuakeHistoryRepository } from 'src/domain/interfaces/repositories/quakeHitoryRepository';
 import {
   DynamoDBDocumentClient,
   GetCommand,
@@ -6,28 +5,26 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { Logger } from '@nestjs/common';
-import {
-  QUAKE_HISTORY_TABLE_NAME,
-  QUAKE_ID_VALID_TIME,
-} from 'src/config/constants';
+import { USERS_TABLE_NAME } from 'src/config/constants';
+import { IUserRepository } from 'src/domain/interfaces/repositories/userRepository';
 
 // Log message constants
 const LOG_MESSAGES = {
-  CHECK_QUAKE_ID_FAILED: 'Failed to check quakeId: ',
-  PUT_QUAKE_ID_FAILED: 'Failed to put quakeId: ',
+  CHECK_USER_ID_FAILED: 'Failed to check userId: ',
+  PUT_USER_ID_FAILED: 'Failed to put userId: ',
 };
 
 /**
- * Quake history repository
+ * User repository
  */
-export class QuakeHistoryRepository implements IQuakeHistoryRepository {
-  private readonly logger = new Logger(QuakeHistoryRepository.name);
+export class UserRepository implements IUserRepository {
+  private readonly logger = new Logger(UserRepository.name);
   private readonly dynamoDbClient: DynamoDBDocumentClient;
   private readonly tableName: string;
 
   constructor() {
     this.dynamoDbClient = this.createDynamoDbClient();
-    this.tableName = QUAKE_HISTORY_TABLE_NAME;
+    this.tableName = USERS_TABLE_NAME;
   }
 
   /**
@@ -43,14 +40,14 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
   }
 
   /**
-   * Check if quake id exists in the table.
-   * @param quakeId quake id
-   * @returns true: quake id exists, false: quake id does not exist
+   * Check if user id exists in the table.
+   * @param userId user id
+   * @returns true: user id exists, false: user id does not exist
    */
-  async isQuakeIdExists(quakeId: string): Promise<boolean> {
+  async isUserIdExists(userId: string): Promise<boolean> {
     const params = {
       TableName: this.tableName,
-      Key: { quakeId: quakeId },
+      Key: { userId: userId },
     };
 
     try {
@@ -58,7 +55,7 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
       return !!result.Item;
     } catch (err) {
       this.logger.error(
-        `${LOG_MESSAGES.CHECK_QUAKE_ID_FAILED}${quakeId}`,
+        `${LOG_MESSAGES.CHECK_USER_ID_FAILED}${userId}`,
         err.stack,
       );
       throw err;
@@ -66,15 +63,14 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
   }
 
   /**
-   * Put quake id in the table.
-   * @param quakeId quake id
+   * Put user id in the table.
+   * @param userId user id
    */
-  async putQuakeId(quakeId: string): Promise<void> {
+  async putUserId(userId: string): Promise<void> {
     const params = {
       TableName: this.tableName,
       Item: {
-        quakeId: quakeId,
-        TTL: QUAKE_ID_VALID_TIME,
+        userId: userId,
       },
     };
 
@@ -82,7 +78,7 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
       await this.dynamoDbClient.send(new PutCommand(params));
     } catch (err) {
       this.logger.error(
-        `${LOG_MESSAGES.PUT_QUAKE_ID_FAILED}${quakeId}`,
+        `${LOG_MESSAGES.PUT_USER_ID_FAILED}${userId}`,
         err.stack,
       );
       throw err;
