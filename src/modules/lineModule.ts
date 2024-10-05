@@ -11,6 +11,7 @@ import { UserApi } from 'src/infrastructure/api/line/userApi';
 import { MessageApi } from 'src/infrastructure/api/line/messageApi';
 import { UserRepository } from 'src/infrastructure/repositories/userRepository';
 import { UserService } from 'src/application/services/userService';
+import { FollowEventService } from 'src/application/services/followEventService';
 
 /**
  * LINE module
@@ -24,6 +25,7 @@ import { UserService } from 'src/application/services/userService';
     LineWebhookService,
     MessageEventService,
     UserService,
+    FollowEventService,
     UserApi,
     MessageApi,
     ChannelAccessTokenApi,
