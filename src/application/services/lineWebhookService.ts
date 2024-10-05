@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { WebhookEvent } from '@line/bot-sdk';
 import { ILineWebhookService } from 'src/domain/interfaces/services/lineWebhookService';
 import { MessageEventService } from './messageEventService';
+import { FollowEventService } from './followEventService';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -16,7 +17,10 @@ const LOG_MESSAGES = {
 export class LineWebhookService implements ILineWebhookService {
   private readonly logger = new Logger(LineWebhookService.name);
 
-  constructor(private readonly messageEventService: MessageEventService) {}
+  constructor(
+    private readonly messageEventService: MessageEventService,
+    private readonly followEventService: FollowEventService,
+  ) {}
 
   /**
    * Verify the signature.
@@ -53,8 +57,10 @@ export class LineWebhookService implements ILineWebhookService {
         this.messageEventService.handleMessageEvent(event);
         break;
       case 'follow':
+        this.followEventService.handleFollowEvent(event);
         break;
       case 'unfollow':
+        this.followEventService.handleUnfollowEvent(event);
         break;
       default:
         this.logger.warn(LOG_MESSAGES.EVENT_TYPE_NOT_SUPPORTED, event.type);

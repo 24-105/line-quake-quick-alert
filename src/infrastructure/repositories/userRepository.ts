@@ -7,6 +7,7 @@ import { IUserRepository } from 'src/domain/interfaces/repositories/userReposito
 const LOG_MESSAGES = {
   CHECK_USER_ID_FAILED: 'Failed to check userId: ',
   PUT_USER_ID_FAILED: 'Failed to put userId: ',
+  DELETE_USER_FAILED: 'Failed to delete user: ',
   UPDATE_USER_PREFECTURE_FAILED: 'Failed to update user prefecture: ',
   UPDATE_USER_SEISMIC_INTENSITY_FAILED:
     'Failed to update user seismic intensity: ',
@@ -71,6 +72,25 @@ export class UserRepository implements IUserRepository {
     } catch (err) {
       this.logger.error(
         `${LOG_MESSAGES.PUT_USER_ID_FAILED}${userId}`,
+        err.stack,
+      );
+      throw err;
+    }
+  }
+
+  /**
+   * Delete user from the table.
+   * @param userId user id
+   */
+  async deleteUser(userId: string): Promise<void> {
+    try {
+      await this.mysqlClient.execute(
+        `DELETE FROM ${USERS_TABLE_NAME} WHERE user_id=?;`,
+        [userId],
+      );
+    } catch (err) {
+      this.logger.error(
+        `${LOG_MESSAGES.DELETE_USER_FAILED}${userId}`,
         err.stack,
       );
       throw err;
