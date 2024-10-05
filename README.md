@@ -82,10 +82,10 @@ $ git clone https://github.com/24-105/line-quake-quick-alert.git
 
 ```bash
 ## homebrewを使用している場合
-$ brew install node@20
+$ brew install node@22
 
 ## voltaを使用している場合
-$ volta install node@20
+$ volta install node@22
 ```
 
 ### バージョンの確認
@@ -113,6 +113,7 @@ $ npx tsc
 
 ```bash
 $ mkdir -p ./docker/dynamodb
+$ mkdir -p ./docker/mysql
 ```
 
 ### Dockerコンテナーの作成と起動
@@ -134,7 +135,6 @@ $ docker-compose logs dynamodb-admin
 ```bash
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/channelAccessToken.ts
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/quakeHistory.ts
-$ NODE_ENV=local npx ts-node src/migration/dynamodb/users.ts
 ```
 
 ### AWS DynamoDBテーブルが作成されたか確認
@@ -149,7 +149,21 @@ $ aws dynamodb list-tables --endpoint-url http://localhost:8000
 ```bash
 $ aws dynamodb delete-table --table-name ChannelAccessToken --endpoint-url http://localhost:8000
 $ aws dynamodb delete-table --table-name QuakeHistory --endpoint-url http://localhost:8000
-$ aws dynamodb delete-table --table-name Users --endpoint-url http://localhost:8000
+```
+
+### MySQLデータベースを作成する
+
+#### MySQLへログインする
+
+```bash
+$ docker exec -it mysql bin/bash
+$ mysql -u root -p -h localhost
+```
+
+#### データベースを作成する
+
+```sql
+$ CREATE DATABASE quake_alert_bff;
 ```
 
 ### Dockerコンテナーの停止と削除
