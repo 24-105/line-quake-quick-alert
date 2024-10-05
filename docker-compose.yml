@@ -1,6 +1,21 @@
 version: '3.8'
 
 services:
+  mysql:
+    image: mysql:8.0
+    platform: linux/amd64
+    container_name: mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: quake-alert-bff
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+
   dynamodb-local:
     image: amazon/dynamodb-local:latest
     container_name: dynamodb-local

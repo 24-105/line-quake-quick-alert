@@ -13,8 +13,8 @@ import {
 
 // Log message constants
 const LOG_MESSAGES = {
-  PUT_CHANNEL_ACCESS_TOKEN_FAILED: 'Failed to put channel access token.',
-  GET_CHANNEL_ACCESS_TOKEN_FAILED: 'Failed to get channel access token.',
+  PUT_CHANNEL_ACCESS_TOKEN_FAILED: 'Failed to put channel access token: ',
+  GET_CHANNEL_ACCESS_TOKEN_FAILED: 'Failed to get channel access token: ',
 };
 
 /**
@@ -28,7 +28,7 @@ export class ChannelAccessTokenRepository
   private readonly tableName: string;
 
   constructor() {
-    this.dynamoDbClient = ChannelAccessTokenRepository.createDynamoDbClient();
+    this.dynamoDbClient = this.createDynamoDbClient();
     this.tableName = CHANNEL_ACCESS_TOKEN_TABLE_NAME;
   }
 
@@ -36,7 +36,7 @@ export class ChannelAccessTokenRepository
    * Create an Amazon DynamoDB service client object.
    * @returns DynamoDB service client object
    */
-  private static createDynamoDbClient(): DynamoDBDocumentClient {
+  private createDynamoDbClient(): DynamoDBDocumentClient {
     const client = new DynamoDBClient({
       region: process.env.AWS_REGION,
       endpoint: process.env.DYNAMODB_ENDPOINT,
@@ -46,8 +46,9 @@ export class ChannelAccessTokenRepository
 
   /**
    * Put channel access token in the table.
-   * @param channelAccessToken
-   * @param keyId
+   * @param channelId channel id
+   * @param channelAccessToken channel access token
+   * @param keyId key id
    */
   async putChannelAccessToken(
     channelId: string,
@@ -68,7 +69,7 @@ export class ChannelAccessTokenRepository
       await this.dynamoDbClient.send(new PutCommand(params));
     } catch (err) {
       this.logger.error(
-        LOG_MESSAGES.PUT_CHANNEL_ACCESS_TOKEN_FAILED,
+        `${LOG_MESSAGES.PUT_CHANNEL_ACCESS_TOKEN_FAILED}${channelId}`,
         err.stack,
       );
       throw err;
@@ -91,7 +92,7 @@ export class ChannelAccessTokenRepository
       return result.Item.channelAccessToken;
     } catch (err) {
       this.logger.error(
-        LOG_MESSAGES.GET_CHANNEL_ACCESS_TOKEN_FAILED,
+        `${LOG_MESSAGES.GET_CHANNEL_ACCESS_TOKEN_FAILED}${channelId}`,
         err.stack,
       );
       throw err;

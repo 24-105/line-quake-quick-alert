@@ -42,12 +42,6 @@ export class LineWebhookController {
       return;
     }
 
-    // Check if the request body is valid.
-    if (!this.lineWebhookService.isWebhookRequestBody(body)) {
-      this.logger.error(LOG_MESSAGES.WEBHOOK_EVENTS_BAD_REQUEST);
-      return;
-    }
-
     try {
       this.lineWebhookService.handleEvents(body.events);
     } catch (err) {

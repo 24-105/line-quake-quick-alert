@@ -13,8 +13,8 @@ import {
 
 // Log message constants
 const LOG_MESSAGES = {
-  CHECK_QUAKE_ID_FAILED: 'Failed to fetch quake history quakeId.',
-  PUT_QUAKE_ID_FAILED: 'Failed to put quakeId.',
+  CHECK_QUAKE_ID_FAILED: 'Failed to check quakeId: ',
+  PUT_QUAKE_ID_FAILED: 'Failed to put quakeId: ',
 };
 
 /**
@@ -26,7 +26,7 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
   private readonly tableName: string;
 
   constructor() {
-    this.dynamoDbClient = QuakeHistoryRepository.createDynamoDbClient();
+    this.dynamoDbClient = this.createDynamoDbClient();
     this.tableName = QUAKE_HISTORY_TABLE_NAME;
   }
 
@@ -34,7 +34,7 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
    * Create an Amazon DynamoDB service client object.
    * @returns DynamoDB service client object
    */
-  private static createDynamoDbClient(): DynamoDBDocumentClient {
+  private createDynamoDbClient(): DynamoDBDocumentClient {
     const client = new DynamoDBClient({
       region: process.env.AWS_REGION,
       endpoint: process.env.DYNAMODB_ENDPOINT,
@@ -57,7 +57,10 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
       const result = await this.dynamoDbClient.send(new GetCommand(params));
       return !!result.Item;
     } catch (err) {
-      this.logger.error(LOG_MESSAGES.CHECK_QUAKE_ID_FAILED, err.stack);
+      this.logger.error(
+        `${LOG_MESSAGES.CHECK_QUAKE_ID_FAILED}${quakeId}`,
+        err.stack,
+      );
       throw err;
     }
   }
@@ -78,7 +81,10 @@ export class QuakeHistoryRepository implements IQuakeHistoryRepository {
     try {
       await this.dynamoDbClient.send(new PutCommand(params));
     } catch (err) {
-      this.logger.error(LOG_MESSAGES.PUT_QUAKE_ID_FAILED, err.stack);
+      this.logger.error(
+        `${LOG_MESSAGES.PUT_QUAKE_ID_FAILED}${quakeId}`,
+        err.stack,
+      );
       throw err;
     }
   }

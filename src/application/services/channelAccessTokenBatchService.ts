@@ -29,8 +29,8 @@ export class ChannelAccessTokenBatchService
   /**
    * Batch process to fetch and update channel access token.
    */
-  // @Cron(CronExpression.EVERY_10_SECONDS)
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_10_SECONDS)
+  // @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async processChannelAccessTokenBatch(): Promise<void> {
     this.logger.log(LOG_MESSAGES.START_PROCESS_CHANNEL_ACCESS_TOKEN_BATCH);
 
