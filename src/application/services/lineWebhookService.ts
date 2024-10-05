@@ -3,7 +3,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { WebhookEvent } from '@line/bot-sdk';
 import { ILineWebhookService } from 'src/domain/interfaces/services/lineWebhookService';
 import { MessageEventService } from './messageEventService';
-import { isWebhookRequestBody } from 'src/domain/useCase/webhookEvent';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -32,15 +31,6 @@ export class LineWebhookService implements ILineWebhookService {
       .update(JSON.stringify(body))
       .digest('base64');
     return hash === signature;
-  }
-
-  /**
-   * Validate the webhook request body.
-   * @param body request body
-   * @returns
-   */
-  isWebhookRequestBody(body: any): boolean {
-    return isWebhookRequestBody(body);
   }
 
   /**

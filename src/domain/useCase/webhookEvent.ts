@@ -1,23 +1,4 @@
-import {
-  TextMessage,
-  WebhookEvent,
-  WebhookRequestBody,
-  MessageEvent,
-} from '@line/bot-sdk';
-
-/**
- * Type guard to check if the body is WebhookRequestBody
- * @param body request body
- * @returns true: WebhookRequestBody, false: not WebhookRequestBody
- */
-export const isWebhookRequestBody = (body: any): body is WebhookRequestBody => {
-  return (
-    typeof body === 'object' &&
-    body !== null &&
-    'destination' in body &&
-    'events' in body
-  );
-};
+import { TextMessage, WebhookEvent, MessageEvent } from '@line/bot-sdk';
 
 /**
  * Type guard to check if the event is a MessageEvent

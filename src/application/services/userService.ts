@@ -1,5 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 import { IUserService } from 'src/domain/interfaces/services/userService';
+import { convertPrefectureToEnum } from 'src/domain/useCase/prefecture';
+import { convertSeismicIntensityEnum } from 'src/domain/useCase/seismicIntensity';
 import { UserRepository } from 'src/infrastructure/repositories/userRepository';
 
 // Log message constants
@@ -40,7 +43,10 @@ export class UserService implements IUserService {
     userId: string,
     prefecture: string,
   ): Promise<void> {
-    await this.userRepository.updateUserPrefecture(userId, prefecture);
+    await this.userRepository.updateUserPrefecture(
+      userId,
+      convertPrefectureToEnum(prefecture),
+    );
   }
 
   /**
@@ -54,7 +60,7 @@ export class UserService implements IUserService {
   ): Promise<void> {
     await this.userRepository.updateUserSeismicIntensity(
       userId,
-      seismicIntensity,
+      convertSeismicIntensityEnum(seismicIntensity) ?? PointsScale.SCALE40,
     );
   }
 

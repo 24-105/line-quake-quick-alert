@@ -1,10 +1,4 @@
-import {
-  DynamoDBDocumentClient,
-  GetCommand,
-  PutCommand,
-  UpdateCommand,
-} from '@aws-sdk/lib-dynamodb';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { createPool, Pool } from 'mysql2/promise';
 import { Logger } from '@nestjs/common';
 import { USERS_TABLE_NAME } from 'src/config/constants';
 import { IUserRepository } from 'src/domain/interfaces/repositories/userRepository';
@@ -23,24 +17,24 @@ const LOG_MESSAGES = {
  */
 export class UserRepository implements IUserRepository {
   private readonly logger = new Logger(UserRepository.name);
-  private readonly dynamoDbClient: DynamoDBDocumentClient;
+  private mysqlClient: Pool;
   private readonly tableName: string;
 
   constructor() {
-    this.dynamoDbClient = this.createDynamoDbClient();
+    this.mysqlClient = this.createMysqlClient();
     this.tableName = USERS_TABLE_NAME;
   }
 
   /**
-   * Create an Amazon DynamoDB service client object.
-   * @returns DynamoDB service client object
+   * Create a MySQL client object.
    */
-  private createDynamoDbClient(): DynamoDBDocumentClient {
-    const client = new DynamoDBClient({
-      region: process.env.AWS_REGION,
-      endpoint: process.env.DYNAMODB_ENDPOINT,
+  private createMysqlClient() {
+    return createPool({
+      host: process.env.MYSQL_HOST,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
     });
-    return DynamoDBDocumentClient.from(client);
   }
 
   /**
@@ -49,17 +43,15 @@ export class UserRepository implements IUserRepository {
    * @returns true: user id exists, false: user id does not exist
    */
   async isUserIdExists(userId: string): Promise<boolean> {
-    const params = {
-      TableName: this.tableName,
-      Key: { userId: userId },
-    };
-
     try {
-      const result = await this.dynamoDbClient.send(new GetCommand(params));
-      return !!result.Item;
+      const [rows] = await this.mysqlClient.execute(
+        `SELECT * FROM ${USERS_TABLE_NAME} WHERE user_id = ? LIMIT 1;`,
+        [userId],
+      );
+      return rows[0].length > 0;
     } catch (err) {
       this.logger.error(
-        `${LOG_MESSAGES.CHECK_USER_ID_FAILED}${userId}`,
+        `Failed to check if user ID exists: ${userId}`,
         err.stack,
       );
       throw err;
@@ -71,15 +63,11 @@ export class UserRepository implements IUserRepository {
    * @param userId user id
    */
   async putUserId(userId: string): Promise<void> {
-    const params = {
-      TableName: this.tableName,
-      Item: {
-        userId: userId,
-      },
-    };
-
     try {
-      await this.dynamoDbClient.send(new PutCommand(params));
+      await this.mysqlClient.execute(
+        `INSERT INTO ${USERS_TABLE_NAME} (user_id) VALUES (?);`,
+        [userId],
+      );
     } catch (err) {
       this.logger.error(
         `${LOG_MESSAGES.PUT_USER_ID_FAILED}${userId}`,
@@ -92,24 +80,17 @@ export class UserRepository implements IUserRepository {
   /**
    * Update user prefecture.
    * @param userId user id
-   * @param prefecture prefecture name
+   * @param prefecture prefecture number
    */
   async updateUserPrefecture(
     userId: string,
-    prefecture: string,
+    prefecture: number,
   ): Promise<void> {
-    const params = {
-      TableName: this.tableName,
-      Key: { userId: userId },
-      UpdateExpression: 'set prefecture = :prefecture',
-      ExpressionAttributeValues: {
-        ':prefecture': prefecture,
-      },
-      ConditionExpression: 'attribute_exists(userId)',
-    };
-
     try {
-      await this.dynamoDbClient.send(new UpdateCommand(params));
+      await this.mysqlClient.execute(
+        `UPDATE ${USERS_TABLE_NAME} SET prefecture=? WHERE user_id=?;`,
+        [prefecture, userId],
+      );
     } catch (err) {
       this.logger.error(
         `${LOG_MESSAGES.UPDATE_USER_PREFECTURE_FAILED}${userId}`,
@@ -126,20 +107,13 @@ export class UserRepository implements IUserRepository {
    */
   async updateUserSeismicIntensity(
     userId: string,
-    seismicIntensity: string,
+    seismicIntensity: number,
   ): Promise<void> {
-    const params = {
-      TableName: this.tableName,
-      Key: { userId: userId },
-      UpdateExpression: 'set seismicIntensity = :seismicIntensity',
-      ExpressionAttributeValues: {
-        ':seismicIntensity': seismicIntensity,
-      },
-      ConditionExpression: 'attribute_exists(userId)',
-    };
-
     try {
-      await this.dynamoDbClient.send(new UpdateCommand(params));
+      await this.mysqlClient.execute(
+        `UPDATE ${USERS_TABLE_NAME} SET seismic_intensity=? WHERE user_id=?;`,
+        [seismicIntensity, userId],
+      );
     } catch (err) {
       this.logger.error(
         `${LOG_MESSAGES.UPDATE_USER_SEISMIC_INTENSITY_FAILED}${userId}`,

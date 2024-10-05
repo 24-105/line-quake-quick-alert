@@ -2,9 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { IChannelAccessTokenService } from 'src/domain/interfaces/services/channelAccessTokenService';
 import { ChannelAccessTokenRepository } from 'src/infrastructure/repositories/channelAccessTokenRepository';
 import { generateJwt } from 'src/domain/useCase/jwt';
-import * as fs from 'fs';
-import * as path from 'path';
 import { ChannelAccessTokenApi } from 'src/infrastructure/api/line/channelAccessTokenApi';
+import { readKeyFile } from 'src/domain/useCase/file';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -42,8 +41,8 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
     this.logger.log(LOG_MESSAGES.REQUEST_PROCESS_CHANNEL_ACCESS_TOKEN);
 
     // read private key file
-    const privateKey = this.readKeyFile('key/private.key');
-    const adminPrivateKey = this.readKeyFile('key/admin-private.key');
+    const privateKey = readKeyFile('key/private.key');
+    const adminPrivateKey = readKeyFile('key/admin-private.key');
 
     try {
       const jwtList = await this.generateJwts(privateKey, adminPrivateKey);
@@ -59,10 +58,10 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
   }
 
   /**
-   * Get channel access token.
+   * Get latest channel access token.
    * @returns channel access token
    */
-  async getChannelAccessToken(): Promise<string> {
+  async getLatestChannelAccessToken(): Promise<string> {
     const channelAccessToken = await this.fetchChannelAccessToken();
     const isValidToken =
       await this.verifyChannelAccessToken(channelAccessToken);
@@ -170,15 +169,5 @@ export class ChannelAccessTokenService implements IChannelAccessTokenService {
         throw err;
       }
     }
-  }
-
-  /**
-   * Read private key file.
-   * @param fileName private key file name
-   * @returns private key
-   */
-  private readKeyFile(relativeFilePath: string): string {
-    const filePath = path.join(process.cwd(), relativeFilePath);
-    return fs.readFileSync(filePath, 'utf8');
   }
 }

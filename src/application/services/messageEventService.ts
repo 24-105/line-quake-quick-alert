@@ -126,6 +126,7 @@ export class MessageEventService implements IMessageEventService {
     this.logger.log(
       `${LOG_MESSAGES.HANDLING_QUAKE_SEISMIC_INTENSITY}: ${text}`,
     );
+    await this.userService.ensureUserIdExists(userId);
 
     try {
       const seismicIntensity = extractSeismicIntensity(text);
@@ -159,13 +160,17 @@ export class MessageEventService implements IMessageEventService {
     text: string,
   ): Promise<void> {
     this.logger.log(`${LOG_MESSAGES.HANDLING_CONTACT_ME_BY_CHAT}: ${text}`);
+    await this.userService.ensureUserIdExists(userId);
+
     try {
       const channelAccessToken =
-        await this.channelAccessTokenService.getChannelAccessToken();
+        await this.channelAccessTokenService.getLatestChannelAccessToken();
+
       const userProfile = await this.userApi.fetchUserProfile(
         channelAccessToken,
         userId,
       );
+
       const message = await createContactTextMessage(userProfile.displayName);
 
       await this.messageApi.pushMessage(channelAccessToken, userId, [message]);
