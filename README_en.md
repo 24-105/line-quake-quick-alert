@@ -80,10 +80,10 @@ $ git clone https://github.com/24-105/line-quake-quick-alert.git
 
 ```bash
 ## using homebrew
-$ brew install node@20
+$ brew install node@22
 
 ## using volta
-$ volta install node@20
+$ volta install node@22
 ```
 
 ### Check version
@@ -111,6 +111,7 @@ $ npx tsc
 
 ```bash
 $ mkdir -p ./docker/dynamodb
+$ mkdir -p ./docker/mysql
 ```
 
 ### Creating and starting multiple containers
@@ -132,7 +133,6 @@ $ docker-compose logs dynamodb-admin
 ```bash
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/channelAccessToken.ts
 $ NODE_ENV=local npx ts-node src/migration/dynamodb/quakeHistory.ts
-$ NODE_ENV=local npx ts-node src/migration/dynamodb/users.ts
 ```
 
 ### Check if table was created
@@ -147,7 +147,21 @@ $ aws dynamodb list-tables --endpoint-url http://localhost:8000
 ```bash
 $ aws dynamodb delete-table --table-name ChannelAccessToken --endpoint-url http://localhost:8000
 $ aws dynamodb delete-table --table-name QuakeHistory --endpoint-url http://localhost:8000
-$ aws dynamodb delete-table --table-name Users --endpoint-url http://localhost:8000
+```
+
+### Create MySQL database
+
+#### Log in to MySQL
+
+```bash
+$ docker exec -it mysql bin/bash
+$ mysql -u root -p -h localhost
+```
+
+#### Create a database
+
+```sql
+$ CREATE DATABASE quake_alert_bff;
 ```
 
 ### Stopping and removing containers
