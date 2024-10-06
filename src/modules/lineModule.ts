@@ -12,12 +12,13 @@ import { MessageApi } from 'src/infrastructure/api/line/messageApi';
 import { UserRepository } from 'src/infrastructure/repositories/userRepository';
 import { UserService } from 'src/application/services/userService';
 import { FollowEventService } from 'src/application/services/followEventService';
+import { EncryptModule } from './encryptionModule';
 
 /**
  * LINE module
  */
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, EncryptModule],
   controllers: [LineWebhookController],
   providers: [
     ChannelAccessTokenService,
