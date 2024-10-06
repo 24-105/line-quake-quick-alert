@@ -1,5 +1,4 @@
-// export const QUAKE_HISTORY_VALID_TIME = 60 * 3; // 3 minutes
-export const QUAKE_HISTORY_VALID_TIME = 60 * 60 * 24 * 7; // 7 days
+export const QUAKE_HISTORY_VALID_TIME = 60 * 3; // 3 minutes
 export const QUAKE_ID_VALID_TIME = 60 * 5; // 5 minutes
 
 export const CHANNEL_ACCESS_TOKEN_VALID_TIME = 60 * 60 * 24 * 3; // 3 days
@@ -28,3 +27,5 @@ export const RESPONSE_MESSAGE_TRIGGER = {
     /^(震度4|震度5弱|震度5強|震度6弱|震度6強)以上を選択しました。$/,
   CONTACT_ME_BY_CHAT_REGEX: /チャットで問い合わせます。$/,
 };
+
+export const ENCRYPTION_ALGORITHM = 'aes-256-gcm';

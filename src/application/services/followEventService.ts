@@ -2,7 +2,6 @@ import { WebhookEvent } from '@line/bot-sdk';
 import { IFollowEventService } from 'src/domain/interfaces/services/followEventService';
 import { UserService } from './userService';
 import { Logger } from '@nestjs/common';
-import { UserRepository } from 'src/infrastructure/repositories/userRepository';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -18,10 +17,7 @@ const LOG_MESSAGES = {
 export class FollowEventService implements IFollowEventService {
   private readonly logger = new Logger(FollowEventService.name);
 
-  constructor(
-    private readonly userService: UserService,
-    private readonly userRepository: UserRepository,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   /**
    * Handle follow event.
@@ -44,7 +40,7 @@ export class FollowEventService implements IFollowEventService {
   async handleUnfollowEvent(event: WebhookEvent): Promise<void> {
     this.logger.log(LOG_MESSAGES.HANDLING_UNFOLLOW_EVENT);
     try {
-      await this.userRepository.deleteUser(event.source.userId);
+      await this.userService.deleteUser(event.source.userId);
     } catch (err) {
       this.logger.log(LOG_MESSAGES.HANDLING_UNFOLLOW_EVENT_FAILED);
       throw err;
