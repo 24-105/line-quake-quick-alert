@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { LINE_API_PUSH_MESSAGE_URL } from 'src/config/constants';
 import { IMessageApi } from 'src/domain/interfaces/api/line/messageApi';
-import { createAuthHeaders } from 'src/domain/useCase/http';
+import { createAuthRetryHeaders } from 'src/domain/useCase/http';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -35,11 +35,16 @@ export class MessageApi implements IMessageApi {
     this.logger.log(LOG_MESSAGES.REQUEST_PUSH_MESSAGE);
 
     const url = LINE_API_PUSH_MESSAGE_URL;
-    const headers = createAuthHeaders(channelAccessToken);
+    const headers = createAuthRetryHeaders(channelAccessToken);
     const body = this.createRequestBody(to, messages);
 
     try {
-      await firstValueFrom(this.httpService.post(url, body, { headers }));
+      const response = await firstValueFrom(
+        this.httpService.post(url, body, { headers }),
+      );
+      if (response.status == 409) {
+        throw new Error(response.data.message);
+      }
     } catch (err) {
       this.logger.error(LOG_MESSAGES.POST_PUSH_MESSAGE_FAILED, err.stack);
       throw err;
