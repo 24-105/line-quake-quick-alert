@@ -24,17 +24,25 @@ export class QuakeBatchService implements IQuakeBatchService {
   /**
    * Batch process to fetch, save, and notify quake history.
    */
-  // @Cron(CronExpression.EVERY_10_SECONDS)
+  // @Cron(CronExpression.EVERY_5_SECONDS)
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async processQuakeHistoryBatch(): Promise<void> {
+    const startTime = performance.now();
+
     this.logger.log(LOG_MESSAGES.START_PROCESS_QUAKE_HISTORY_BATCH);
     const codes = P2P_GET_QUAKE_HISTORY_CODE; // fixed argument
-    const limit = 5; // fixed argument
+    const limit = 3; // fixed argument
     const offset = 0; // fixed argument
 
     try {
       await this.quakeService.processQuakeHistory(codes, limit, offset);
       this.logger.log(LOG_MESSAGES.PROCESS_QUAKE_HISTORY_BATCH_SUCCESS);
+
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+      this.logger.log(
+        `processQuakeHistoryBatch took ${duration} milliseconds.`,
+      );
     } catch (err) {
       this.logger.error(
         LOG_MESSAGES.PROCESS_QUAKE_HISTORY_BATCH_FAILED,

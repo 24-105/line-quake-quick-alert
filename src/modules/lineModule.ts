@@ -9,28 +9,24 @@ import { ChannelAccessTokenApi } from 'src/infrastructure/api/line/channelAccess
 import { MessageEventService } from 'src/application/services/messageEventService';
 import { UserApi } from 'src/infrastructure/api/line/userApi';
 import { MessageApi } from 'src/infrastructure/api/line/messageApi';
-import { UserRepository } from 'src/infrastructure/repositories/userRepository';
-import { UserService } from 'src/application/services/userService';
 import { FollowEventService } from 'src/application/services/followEventService';
-import { EncryptModule } from './encryptionModule';
+import { UserModule } from './userModule';
 
 /**
  * LINE module
  */
 @Module({
-  imports: [HttpModule, EncryptModule],
+  imports: [HttpModule, UserModule],
   controllers: [LineWebhookController],
   providers: [
     ChannelAccessTokenService,
     ChannelAccessTokenBatchService,
     LineWebhookService,
     MessageEventService,
-    UserService,
     FollowEventService,
     UserApi,
     MessageApi,
     ChannelAccessTokenApi,
-    UserRepository,
     ChannelAccessTokenRepository,
   ],
 })

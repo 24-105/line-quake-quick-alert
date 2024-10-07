@@ -2,9 +2,12 @@ import { createPool, Pool } from 'mysql2/promise';
 import { Logger } from '@nestjs/common';
 import { USERS_TABLE_NAME } from 'src/config/constants';
 import { IUserRepository } from 'src/domain/interfaces/repositories/userRepository';
+import { User } from 'src/domain/entities/user';
 
 // Log message constants
 const LOG_MESSAGES = {
+  GET_USERS: 'Getting users',
+  GET_USERS_FAILED: 'Failed to get users',
   CHECK_USER_ID_EXISTS: 'Checking if user ID exists: ',
   CHECK_USER_ID_FAILED: 'Failed to check userId: ',
   PUT_USER_ID: 'Putting new user ID: ',
@@ -36,11 +39,34 @@ export class UserRepository implements IUserRepository {
    */
   private createMysqlClient() {
     return createPool({
-      host: process.env.MYSQL_HOST,
-      user: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE,
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      // timezone: 'Z',
     });
+  }
+
+  /**
+   * Get users by prefectures.
+   * @param prefectures prefectures
+   * @returns Users
+   */
+  async getUsersByPrefectures(prefectures: number[]): Promise<User[]> {
+    this.logger.log(LOG_MESSAGES.GET_USERS);
+    const placeholders = prefectures.map(() => '?').join(',');
+
+    try {
+      const [rows] = await this.mysqlClient.execute(
+        `SELECT * FROM ${USERS_TABLE_NAME} WHERE prefecture IN (${placeholders});`,
+        prefectures,
+      );
+      return rows as User[];
+    } catch (err) {
+      this.logger.error(LOG_MESSAGES.GET_USERS_FAILED, err.stack);
+      throw err;
+    }
   }
 
   /**
@@ -96,7 +122,7 @@ export class UserRepository implements IUserRepository {
 
     try {
       await this.mysqlClient.execute(
-        `DELETE FROM ${USERS_TABLE_NAME} WHERE user_id=?;`,
+        `DELETE FROM ${USERS_TABLE_NAME} WHERE user_id = ?;`,
         [userId],
       );
     } catch (err) {
@@ -121,7 +147,7 @@ export class UserRepository implements IUserRepository {
 
     try {
       await this.mysqlClient.execute(
-        `UPDATE ${USERS_TABLE_NAME} SET prefecture=? WHERE user_id=?;`,
+        `UPDATE ${USERS_TABLE_NAME} SET prefecture = ? WHERE user_id = ?;`,
         [prefecture, userId],
       );
     } catch (err) {
@@ -146,7 +172,7 @@ export class UserRepository implements IUserRepository {
 
     try {
       await this.mysqlClient.execute(
-        `UPDATE ${USERS_TABLE_NAME} SET seismic_intensity=? WHERE user_id=?;`,
+        `UPDATE ${USERS_TABLE_NAME} SET seismic_intensity = ? WHERE user_id = ?;`,
         [seismicIntensity, userId],
       );
     } catch (err) {
