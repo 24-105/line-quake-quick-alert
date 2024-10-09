@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   FetchP2pQuakeHistoryRequestDto,
   fetchP2pQuakeHistoryResponseDto,
-} from 'src/application/dto/quakeHistoryDto';
+} from 'src/application/dtos/quakeHistoryDto';
 import { P2P_GET_QUAKE_HISTORY_URL } from 'src/config/constants';
 import { IP2pQuakeApi } from 'src/domain/interfaces/api/p2pQuake/p2pQuakeApi';
 import { createHeaders } from 'src/domain/useCase/http';

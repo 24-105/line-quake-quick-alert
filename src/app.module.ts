@@ -8,16 +8,16 @@ import { AppDataSource } from './config/dataSource';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 /**
- * アプリケーションモジュール
+ * Application module
  */
 @Module({
   imports: [
-    TypeOrmModule.forRoot(AppDataSource.options), // TypeORMの設定を追加
+    TypeOrmModule.forRoot(AppDataSource.options), // Added TypeORM settings.
     ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV}`, // 環境に応じたファイルを読み込む
-      isGlobal: true, // グローバルに設定する
+      envFilePath: `.env.${process.env.NODE_ENV}`, // Load files according to the environment.
+      isGlobal: true, // Set globally.
     }),
-    ScheduleModule.forRoot(), // スケジュールモジュールを追加
+    ScheduleModule.forRoot(), // Add schedule module.
     AdminModule,
     QuakeModule,
     LineModule,

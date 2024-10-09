@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { IChannelAccessTokenBatchService } from 'src/domain/interfaces/services/channelAccessTokenBatchService';
-import { ChannelAccessTokenService } from './channelAccessTokenService';
+import { ChannelAccessTokenService } from '../services/channelAccessTokenService';
+import { IChannelAccessTokenBatchJob } from 'src/domain/interfaces/jobs/channelAccessTokenBatchJob';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -14,13 +14,11 @@ const LOG_MESSAGES = {
 };
 
 /**
- * Channel access token batch service
+ * Channel access token batch job
  */
 @Injectable()
-export class ChannelAccessTokenBatchService
-  implements IChannelAccessTokenBatchService
-{
-  private readonly logger = new Logger(ChannelAccessTokenBatchService.name);
+export class ChannelAccessTokenBatchJob implements IChannelAccessTokenBatchJob {
+  private readonly logger = new Logger(ChannelAccessTokenBatchJob.name);
 
   constructor(
     private readonly channelAccessTokenService: ChannelAccessTokenService,

@@ -1,19 +1,20 @@
 import { WebhookEvent } from '@line/bot-sdk';
 import { IFollowEventService } from 'src/domain/interfaces/services/followEventService';
 import { UserService } from './userService';
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 // Log message constants
 const LOG_MESSAGES = {
   HANDLING_FOLLOW_EVENT: 'Handling follow event.',
-  HANDLING_FOLLOW_EVENT_FAILED: 'Handling follow event failed.',
+  HANDLING_FOLLOW_EVENT_FAILED: 'Failed to handling follow event.',
   HANDLING_UNFOLLOW_EVENT: 'Handling unfollow event.',
-  HANDLING_UNFOLLOW_EVENT_FAILED: 'Handling unfollow event failed.',
+  HANDLING_UNFOLLOW_EVENT_FAILED: 'Failed to handling unfollow event.',
 };
 
 /**
  * Follow event service
  */
+@Injectable()
 export class FollowEventService implements IFollowEventService {
   private readonly logger = new Logger(FollowEventService.name);
 

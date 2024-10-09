@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 import { IUserService } from 'src/domain/interfaces/services/userService';
-import { convertPrefectureToEnum } from 'src/domain/useCase/prefecture';
-import { convertSeismicIntensityEnum } from 'src/domain/useCase/seismicIntensity';
+import { convertPrefectureToNumber } from 'src/domain/useCase/prefecture';
+import { convertSeismicIntensityToNumber } from 'src/domain/useCase/seismicIntensity';
 import { UserRepository } from 'src/infrastructure/repositories/userRepository';
 import { EncryptionService } from './encryptionService';
+import { User } from 'src/domain/entities/user';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -24,6 +25,18 @@ export class UserService implements IUserService {
   ) {}
 
   /**
+   * Get users by prefectures.
+   * @param prefectures prefectures
+   * @returns Users
+   */
+  async getUsersByPrefectures(prefectures: string[]): Promise<User[]> {
+    const prefectureNumbers = prefectures.map((prefecture) => {
+      return convertPrefectureToNumber(prefecture);
+    });
+    return await this.userRepository.getUsersByPrefectures(prefectureNumbers);
+  }
+
+  /**
    * Ensure user id exists.
    * @param userId user id
    */
@@ -35,7 +48,7 @@ export class UserService implements IUserService {
       await this.userRepository.isUserIdExists(encryptedUserId);
 
     if (!isValidUser) {
-      await this.userRepository.putUserId(userId);
+      await this.userRepository.putUserId(encryptedUserId);
     }
   }
 
@@ -60,7 +73,7 @@ export class UserService implements IUserService {
     const encryptedUserId = await this.encryptionService.encrypt(userId);
     await this.userRepository.updateUserPrefecture(
       encryptedUserId,
-      convertPrefectureToEnum(prefecture),
+      convertPrefectureToNumber(prefecture),
     );
   }
 
@@ -76,7 +89,7 @@ export class UserService implements IUserService {
     const encryptedUserId = await this.encryptionService.encrypt(userId);
     await this.userRepository.updateUserSeismicIntensity(
       encryptedUserId,
-      convertSeismicIntensityEnum(seismicIntensity) ?? PointsScale.SCALE40,
+      convertSeismicIntensityToNumber(seismicIntensity) ?? PointsScale.SCALE40,
     );
   }
 }

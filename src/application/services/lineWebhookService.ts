@@ -64,6 +64,7 @@ export class LineWebhookService implements ILineWebhookService {
         break;
       default:
         this.logger.warn(LOG_MESSAGES.EVENT_TYPE_NOT_SUPPORTED, event.type);
+        break;
     }
   }
 }

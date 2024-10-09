@@ -19,16 +19,17 @@ const LOG_MESSAGES = {
   MESSAGE_TYPE_NOT_SUPPORTED: 'Message types not supported.',
   TEXT_NOT_SUPPORTED: 'Text not supported.',
   HANDLING_WHERE_YOU_LIVE: 'Handling where you live.',
-  HANDLING_WHERE_YOU_LIVE_SUCCESS: 'Handling where you live success.',
-  HANDLING_WHERE_YOU_LIVE_FAILED: 'Handling where you live failed.',
+  HANDLING_WHERE_YOU_LIVE_SUCCESS: 'Successfully Handling where you live.',
+  HANDLING_WHERE_YOU_LIVE_FAILED: 'Failed to handling where you live.',
   HANDLING_QUAKE_SEISMIC_INTENSITY: 'Handling quake seismic intensity.',
   HANDLING_QUAKE_SEISMIC_INTENSITY_SUCCESS:
-    'Handling quake seismic intensity success.',
+    'Successfully Handling quake seismic intensity.',
   HANDLING_QUAKE_SEISMIC_INTENSITY_FAILED:
-    'Handling quake seismic intensity failed.',
+    'Failed to handling quake seismic intensity.',
   HANDLING_CONTACT_ME_BY_CHAT: 'Handling contact me by chat.',
-  HANDLING_CONTACT_ME_BY_CHAT_SUCCESS: 'Handling contact me by chat success.',
-  HANDLING_CONTACT_ME_BY_CHAT_FAILED: 'Handling contact me by chat failed.',
+  HANDLING_CONTACT_ME_BY_CHAT_SUCCESS:
+    'Successfully Handling contact me by chat.',
+  HANDLING_CONTACT_ME_BY_CHAT_FAILED: 'Failed to handling contact me by chat.',
 };
 
 /**

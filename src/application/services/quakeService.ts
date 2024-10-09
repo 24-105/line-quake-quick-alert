@@ -5,6 +5,10 @@ import { QuakeHistoryRepository } from 'src/infrastructure/repositories/quakeHis
 import { isEventTimeValid } from 'src/domain/useCase/quakeEventTime';
 import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 import { P2pQuakeApi } from 'src/infrastructure/api/p2pQuake/p2pQuakeApi';
+import { PointsGroupedByPrefecture } from 'src/domain/types/quakeHistoryPoint';
+import { UserService } from './userService';
+import { fetchP2pQuakeHistoryResponseDto } from '../dtos/quakeHistoryDto';
+import { userConverter } from 'src/domain/converters/user';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -23,6 +27,7 @@ export class QuakeService implements IQuakeService {
   constructor(
     private readonly p2pQuakeApi: P2pQuakeApi,
     private readonly quakeHistoryRepository: QuakeHistoryRepository,
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -45,16 +50,39 @@ export class QuakeService implements IQuakeService {
     // Get current time and convert it to UnixTime.
     const unixTimeNow = convertToUnixTime(getJstTime());
 
-    for (const history of quakeHistory) {
-      if (await this.shouldSkipHistory(history, unixTimeNow)) {
-        continue;
-      }
+    Promise.all(
+      quakeHistory.map(async (history) => {
+        if (await this.shouldSkipHistory(history, unixTimeNow)) {
+          return;
+        }
 
-      // ここでLINEユーザーの登録情報と比較する処理を入れ、配列に詰める
-      // 配列からユーザーを取り出してLINEに通知する処理を入れる
+        // Group points by prefecture.
+        const pointsGroupedByPrefecture =
+          await this.groupPointsByPrefecture(history);
 
-      await this.saveQuakeId(history.id);
-    }
+        const prefectures = Object.keys(pointsGroupedByPrefecture);
+        if (prefectures.length === 0) {
+          return;
+        }
+
+        const users = await this.userService.getUsersByPrefectures(prefectures);
+        if (users.length === 0) {
+          return;
+        }
+
+        Promise.all(
+          users.map(async (userEntity) => {
+            const user = userConverter(userEntity);
+          }),
+        );
+
+        // pref=prefecture, scale>=threshold_seismic_intensityのユーザーを取得する
+
+        // 配列からユーザーを取り出してLINEに通知する処理を入れる
+
+        await this.saveQuakeId(history.id);
+      }),
+    );
   }
 
   /**
@@ -68,7 +96,7 @@ export class QuakeService implements IQuakeService {
     codes: number,
     limit: number,
     offset: number,
-  ): Promise<any[]> {
+  ): Promise<fetchP2pQuakeHistoryResponseDto[]> {
     const quakeHistory = await this.p2pQuakeApi.fetchP2pQuakeHistory(
       codes,
       limit,
@@ -89,7 +117,7 @@ export class QuakeService implements IQuakeService {
    * @returns Boolean indicating if the history should be skipped
    */
   private async shouldSkipHistory(
-    history: any,
+    history: fetchP2pQuakeHistoryResponseDto,
     unixTimeNow: number,
   ): Promise<boolean> {
     if (await isEventTimeValid(unixTimeNow, history.earthquake.time)) {
@@ -105,6 +133,34 @@ export class QuakeService implements IQuakeService {
     }
 
     return false;
+  }
+
+  /**
+   * Group points by prefecture.
+   * @param history Quake history object
+   * @returns Points grouped by prefecture
+   */
+  private async groupPointsByPrefecture(
+    history: fetchP2pQuakeHistoryResponseDto,
+  ): Promise<PointsGroupedByPrefecture> {
+    const pointsGroupedByPrefecture: PointsGroupedByPrefecture = {};
+
+    if (history.points) {
+      history.points
+        .filter((point) => point.scale >= PointsScale.SCALE40)
+        .forEach((point) => {
+          if (!pointsGroupedByPrefecture[point.pref]) {
+            pointsGroupedByPrefecture[point.pref] = [];
+          }
+          pointsGroupedByPrefecture[point.pref].push([
+            point.pref,
+            point.addr,
+            point.scale,
+          ]);
+        });
+    }
+
+    return pointsGroupedByPrefecture;
   }
 
   /**
