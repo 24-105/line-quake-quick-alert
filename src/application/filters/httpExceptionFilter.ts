@@ -9,35 +9,31 @@ import {
 import { Request, Response } from 'express';
 
 /**
- * HTTP exception filter
+ * Http exception filter
  */
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(HttpExceptionFilter.name);
-
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception.getStatus
+      ? exception.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal Server Error';
-
-    this.logger.error(
-      `HTTP Status: ${status} Error Message: ${JSON.stringify(message)}`,
-    );
-
-    response.status(status).json({
+    const errorResponse = {
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message: message,
-    });
+      message: exception.message || 'Internal server error',
+    };
+
+    Logger.error(
+      `${request.method} ${request.url}`,
+      JSON.stringify(errorResponse),
+      'ExceptionFilter',
+    );
+
+    response.status(status).json(errorResponse);
   }
 }

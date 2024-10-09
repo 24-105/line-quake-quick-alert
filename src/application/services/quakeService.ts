@@ -50,37 +50,39 @@ export class QuakeService implements IQuakeService {
     // Get current time and convert it to UnixTime.
     const unixTimeNow = convertToUnixTime(getJstTime());
 
-    for (const history of quakeHistory) {
-      if (await this.shouldSkipHistory(history, unixTimeNow)) {
-        continue;
-      }
+    Promise.all(
+      quakeHistory.map(async (history) => {
+        if (await this.shouldSkipHistory(history, unixTimeNow)) {
+          return;
+        }
 
-      // Group points by prefecture.
-      const pointsGroupedByPrefecture =
-        await this.groupPointsByPrefecture(history);
+        // Group points by prefecture.
+        const pointsGroupedByPrefecture =
+          await this.groupPointsByPrefecture(history);
 
-      const prefectures = Object.keys(pointsGroupedByPrefecture);
-      if (prefectures.length === 0) {
-        continue;
-      }
+        const prefectures = Object.keys(pointsGroupedByPrefecture);
+        if (prefectures.length === 0) {
+          return;
+        }
 
-      const users = await this.userService.getUsersByPrefectures(prefectures);
-      if (users.length === 0) {
-        continue;
-      }
+        const users = await this.userService.getUsersByPrefectures(prefectures);
+        if (users.length === 0) {
+          return;
+        }
 
-      Promise.all(
-        users.map(async (userEntity) => {
-          const user = userConverter(userEntity);
-        }),
-      );
+        Promise.all(
+          users.map(async (userEntity) => {
+            const user = userConverter(userEntity);
+          }),
+        );
 
-      // pref=prefecture, scale>=threshold_seismic_intensityのユーザーを取得する
+        // pref=prefecture, scale>=threshold_seismic_intensityのユーザーを取得する
 
-      // 配列からユーザーを取り出してLINEに通知する処理を入れる
+        // 配列からユーザーを取り出してLINEに通知する処理を入れる
 
-      await this.saveQuakeId(history.id);
-    }
+        await this.saveQuakeId(history.id);
+      }),
+    );
   }
 
   /**
