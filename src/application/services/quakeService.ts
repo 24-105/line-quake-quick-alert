@@ -7,7 +7,7 @@ import { PointsScale } from 'src/domain/enum/quakeHistory/pointsEnum';
 import { P2pQuakeApi } from 'src/infrastructure/api/p2pQuake/p2pQuakeApi';
 import { PointsGroupedByPrefecture } from 'src/domain/types/quakeHistoryPoint';
 import { UserService } from './userService';
-import { fetchP2pQuakeHistoryResponseDto } from '../dto/quakeHistoryDto';
+import { fetchP2pQuakeHistoryResponseDto } from '../dtos/quakeHistoryDto';
 import { userConverter } from 'src/domain/converters/user';
 
 // Log message constants

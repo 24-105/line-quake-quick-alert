@@ -8,6 +8,7 @@ import { decrypt, encrypt } from 'src/domain/useCase/encryption';
 @Injectable()
 export class EncryptionService implements IEncryptionService {
   private readonly key = Buffer.from(process.env.ENCRYPTION_KEY, 'base64');
+  private readonly iv = Buffer.from(process.env.ENCRYPTION_IV, 'base64');
 
   /**
    * Encrypt text.
@@ -15,7 +16,7 @@ export class EncryptionService implements IEncryptionService {
    * @returns encrypted text
    */
   async encrypt(text: string): Promise<string> {
-    return encrypt(text, this.key);
+    return encrypt(text, this.key, this.iv);
   }
 
   /**

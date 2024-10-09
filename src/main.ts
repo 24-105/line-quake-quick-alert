@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { join } from 'path';
-import { HttpExceptionFilter } from './filters/httpExceptionFilter';
+import { HttpExceptionFilter } from './application/filters/httpExceptionFilter';
 
 /**
  * NestJSアプリケーションの起動

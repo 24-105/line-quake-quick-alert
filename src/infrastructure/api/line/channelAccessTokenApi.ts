@@ -2,13 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { URLSearchParams } from 'url';
-import { fetchChannelAccessTokenResponseDto } from 'src/application/dto/channelAccessTokenDto';
 import {
   LINE_API_OAUTH_TOKEN_URL,
   LINE_API_OAUTH_VERIFY_URL,
 } from 'src/config/constants';
 import { IChannelAccessTokenApi } from 'src/domain/interfaces/api/line/channelAccessTokenApi';
 import { createEncodeHeaders } from 'src/domain/useCase/http';
+import { IssueChannelAccessTokenResponse } from '@line/bot-sdk/dist/channel-access-token/api';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -37,7 +37,7 @@ export class ChannelAccessTokenApi implements IChannelAccessTokenApi {
    */
   async fetchChannelAccessToken(
     jwt: string,
-  ): Promise<fetchChannelAccessTokenResponseDto> {
+  ): Promise<IssueChannelAccessTokenResponse> {
     this.logger.log(LOG_MESSAGES.REQUEST_FETCH_CHANNEL_ACCESS_TOKEN);
 
     const url = LINE_API_OAUTH_TOKEN_URL;

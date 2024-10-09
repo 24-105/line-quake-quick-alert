@@ -1,8 +1,8 @@
-import { createPool, Pool } from 'mysql2/promise';
-import { Logger } from '@nestjs/common';
-import { USERS_TABLE_NAME } from 'src/config/constants';
+import { Injectable, Logger } from '@nestjs/common';
 import { IUserRepository } from 'src/domain/interfaces/repositories/userRepository';
 import { User } from 'src/domain/entities/user';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
 
 // Log message constants
 const LOG_MESSAGES = {
@@ -16,37 +16,23 @@ const LOG_MESSAGES = {
   DELETE_USER_FAILED: 'Failed to delete user: ',
   UPDATE_USER_PREFECTURE: 'User ID to update prefecture: ',
   UPDATE_USER_PREFECTURE_FAILED: 'Failed to update user prefecture: ',
-  UPDATE_USER_SEISMIC_INTENSITY: 'User ID to update seismic intensity: ',
-  UPDATE_USER_SEISMIC_INTENSITY_FAILED:
-    'Failed to update user seismic intensity: ',
+  UPDATE_USER_THRESHOLD_SEISMIC_INTENSITY:
+    'User ID to update threshold_seismic_intensity: ',
+  UPDATE_USER_THRESHOLD_SEISMIC_INTENSITY_FAILED:
+    'Failed to update user threshold_seismic_intensity: ',
 };
 
 /**
  * User repository
  */
+@Injectable()
 export class UserRepository implements IUserRepository {
   private readonly logger = new Logger(UserRepository.name);
-  private mysqlClient: Pool;
-  private readonly tableName: string;
 
-  constructor() {
-    this.mysqlClient = this.createMysqlClient();
-    this.tableName = USERS_TABLE_NAME;
-  }
-
-  /**
-   * Create a MySQL client object.
-   */
-  private createMysqlClient() {
-    return createPool({
-      user: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      // timezone: 'Z',
-    });
-  }
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
 
   /**
    * Get users by prefectures.
@@ -55,14 +41,14 @@ export class UserRepository implements IUserRepository {
    */
   async getUsersByPrefectures(prefectures: number[]): Promise<User[]> {
     this.logger.log(LOG_MESSAGES.GET_USERS);
-    const placeholders = prefectures.map(() => '?').join(',');
 
     try {
-      const [rows] = await this.mysqlClient.execute(
-        `SELECT * FROM ${USERS_TABLE_NAME} WHERE prefecture IN (${placeholders});`,
-        prefectures,
-      );
-      return rows as User[];
+      const users = await this.userRepository.find({
+        where: {
+          prefecture: In(prefectures),
+        },
+      });
+      return users;
     } catch (err) {
       this.logger.error(LOG_MESSAGES.GET_USERS_FAILED, err.stack);
       throw err;
@@ -78,11 +64,10 @@ export class UserRepository implements IUserRepository {
     this.logger.log(`${LOG_MESSAGES.CHECK_USER_ID_EXISTS}${userId}`);
 
     try {
-      const [rows] = await this.mysqlClient.execute(
-        `SELECT * FROM ${USERS_TABLE_NAME} WHERE user_id = ? LIMIT 1;`,
-        [userId],
-      );
-      return rows[0].length > 0;
+      const user = await this.userRepository.findOne({
+        where: { user_id: userId },
+      });
+      return !!user;
     } catch (err) {
       this.logger.error(
         `Failed to check if user ID exists: ${userId}`,
@@ -100,10 +85,7 @@ export class UserRepository implements IUserRepository {
     this.logger.log(`${LOG_MESSAGES.PUT_USER_ID}${userId}`);
 
     try {
-      await this.mysqlClient.execute(
-        `INSERT INTO ${USERS_TABLE_NAME} (user_id) VALUES (?);`,
-        [userId],
-      );
+      await this.userRepository.insert({ user_id: userId });
     } catch (err) {
       this.logger.error(
         `${LOG_MESSAGES.PUT_USER_ID_FAILED}${userId}`,
@@ -121,10 +103,7 @@ export class UserRepository implements IUserRepository {
     this.logger.log(`${LOG_MESSAGES.DELETE_USER}${userId}`);
 
     try {
-      await this.mysqlClient.execute(
-        `DELETE FROM ${USERS_TABLE_NAME} WHERE user_id = ?;`,
-        [userId],
-      );
+      await this.userRepository.delete({ user_id: userId });
     } catch (err) {
       this.logger.error(
         `${LOG_MESSAGES.DELETE_USER_FAILED}${userId}`,
@@ -146,9 +125,9 @@ export class UserRepository implements IUserRepository {
     this.logger.log(`${LOG_MESSAGES.UPDATE_USER_PREFECTURE}${userId}`);
 
     try {
-      await this.mysqlClient.execute(
-        `UPDATE ${USERS_TABLE_NAME} SET prefecture = ? WHERE user_id = ?;`,
-        [prefecture, userId],
+      await this.userRepository.update(
+        { user_id: userId },
+        { prefecture: prefecture },
       );
     } catch (err) {
       this.logger.error(
@@ -160,7 +139,7 @@ export class UserRepository implements IUserRepository {
   }
 
   /**
-   * Update user seismic intensity.
+   * Update user threshold seismic intensity
    * @param userId user id
    * @param seismicIntensity seismic intensity
    */
@@ -168,16 +147,18 @@ export class UserRepository implements IUserRepository {
     userId: string,
     seismicIntensity: number,
   ): Promise<void> {
-    this.logger.log(`${LOG_MESSAGES.UPDATE_USER_SEISMIC_INTENSITY}${userId}`);
+    this.logger.log(
+      `${LOG_MESSAGES.UPDATE_USER_THRESHOLD_SEISMIC_INTENSITY}${userId}`,
+    );
 
     try {
-      await this.mysqlClient.execute(
-        `UPDATE ${USERS_TABLE_NAME} SET seismic_intensity = ? WHERE user_id = ?;`,
-        [seismicIntensity, userId],
+      await this.userRepository.update(
+        { user_id: userId },
+        { threshold_seismic_intensity: seismicIntensity },
       );
     } catch (err) {
       this.logger.error(
-        `${LOG_MESSAGES.UPDATE_USER_SEISMIC_INTENSITY_FAILED}${userId}`,
+        `${LOG_MESSAGES.UPDATE_USER_THRESHOLD_SEISMIC_INTENSITY_FAILED}${userId}`,
         err.stack,
       );
       throw err;

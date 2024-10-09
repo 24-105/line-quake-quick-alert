@@ -48,7 +48,7 @@ export class UserService implements IUserService {
       await this.userRepository.isUserIdExists(encryptedUserId);
 
     if (!isValidUser) {
-      await this.userRepository.putUserId(userId);
+      await this.userRepository.putUserId(encryptedUserId);
     }
   }
 

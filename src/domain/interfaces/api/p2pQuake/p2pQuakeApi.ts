@@ -1,4 +1,4 @@
-import { fetchP2pQuakeHistoryResponseDto } from 'src/application/dto/quakeHistoryDto';
+import { fetchP2pQuakeHistoryResponseDto } from 'src/application/dtos/quakeHistoryDto';
 
 /**
  * P2P地震情報 API interface

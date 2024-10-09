@@ -1,15 +1,13 @@
 import * as crypto from 'crypto';
 import { ENCRYPTION_ALGORITHM } from 'src/config/constants';
 
-const iv = crypto.randomBytes(12);
-
 /**
  * Encrypt text.
  * @param text text to encrypt
  * @param key encryption key
  * @returns encrypted text
  */
-export const encrypt = (text: string, key: Buffer): string => {
+export const encrypt = (text: string, key: Buffer, iv: Buffer): string => {
   const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, key, iv);
   let encrypted = cipher.update(text, 'utf8', 'hex');
   encrypted += cipher.final('hex');

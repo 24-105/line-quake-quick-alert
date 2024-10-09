@@ -19,7 +19,6 @@ export const LINE_API_PUSH_MESSAGE_URL =
 
 export const QUAKE_HISTORY_TABLE_NAME = 'QuakeHistory';
 export const CHANNEL_ACCESS_TOKEN_TABLE_NAME = 'ChannelAccessToken';
-export const USERS_TABLE_NAME = 'Users';
 
 export const RESPONSE_MESSAGE_TRIGGER = {
   WHERE_YOU_LIVE_REGEX:
